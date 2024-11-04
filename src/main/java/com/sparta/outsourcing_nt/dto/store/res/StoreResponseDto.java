@@ -1,5 +1,6 @@
 package com.sparta.outsourcing_nt.dto.store.res;
 
+import com.sparta.outsourcing_nt.entity.StoreStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,5 +22,5 @@ public class StoreResponseDto {
     private String closeTime;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
-    private String status;
+    private StoreStatus status;
 }

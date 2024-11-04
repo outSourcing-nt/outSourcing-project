@@ -1,6 +1,7 @@
 package com.sparta.outsourcing_nt.dto.store.req;
 
 import com.sparta.outsourcing_nt.entity.Store;
+import com.sparta.outsourcing_nt.entity.StoreStatus;
 import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -43,6 +44,8 @@ public class StoreCreateRequestDto {
                 .phone(phone)
                 .content(content)
                 .openTime(openTime)
-                .closeTime(closeTime).build();
+                .closeTime(closeTime)
+                .status(StoreStatus.ACTIVE)
+                .build();
     }
 }
