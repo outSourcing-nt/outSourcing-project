@@ -3,15 +3,15 @@ package com.sparta.outsourcing_nt.entity;
 import com.sparta.outsourcing_nt.dto.store.req.StoreCreateRequestDto;
 import com.sparta.outsourcing_nt.dto.store.res.StoreResponseDto;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
+@Builder
 @Table(name = "store")
 @RequiredArgsConstructor
+@AllArgsConstructor
 public class Store extends Timestamped{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,26 +57,7 @@ public class Store extends Timestamped{
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public static Store from(StoreCreateRequestDto reqDto) {
-        Store store = new Store();
-        store.initData(reqDto);
-        return store;
-    }
-
-    private void initData(StoreCreateRequestDto reqDto) {
-        this.name = reqDto.getName();
-        this.category = reqDto.getCategory();
-        this.address = reqDto.getAddress();
-        this.phone = reqDto.getPhone();
-        this.content = reqDto.getContent();
-        this.minDeliveryPrice = reqDto.getMinDeliveryPrice();
-        this.deliveryTip = reqDto.getDeliveryTip();
-        this.openTime = reqDto.getOpenTime();
-        this.closeTime = reqDto.getCloseTime();
-        this.status = "ACTIVE";
-    }
-
-    public StoreResponseDto to() {
+    public StoreResponseDto toResponseDto() {
         return new StoreResponseDto(
                 id,
                 name,

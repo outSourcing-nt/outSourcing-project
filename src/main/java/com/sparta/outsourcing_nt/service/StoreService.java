@@ -16,7 +16,7 @@ public class StoreService {
 
     @Transactional
     public StoreResponseDto createStore(StoreCreateRequestDto reqDto) {
-        Store store = storeRepository.save(Store.from(reqDto));
-        return store.to();
+        Store store = storeRepository.save(reqDto.toEntity());
+        return store.toResponseDto();
     }
 }

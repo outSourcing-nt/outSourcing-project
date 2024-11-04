@@ -1,6 +1,8 @@
 package com.sparta.outsourcing_nt.dto.store.req;
 
+import com.sparta.outsourcing_nt.entity.Store;
 import jakarta.validation.constraints.*;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
@@ -32,4 +34,15 @@ public class StoreCreateRequestDto {
 
     @Pattern(regexp = "^([01]\\d|2[0-3]):[0-5]\\d$", message = "영업 마감 시간은 HH:mm 형식으로 입력해야 합니다.")
     private String closeTime;
+
+    public Store toEntity() {
+        return Store.builder()
+                .name(name)
+                .category(category)
+                .address(address)
+                .phone(phone)
+                .content(content)
+                .openTime(openTime)
+                .closeTime(closeTime).build();
+    }
 }
