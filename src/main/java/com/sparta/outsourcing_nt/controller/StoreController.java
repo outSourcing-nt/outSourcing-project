@@ -3,6 +3,7 @@ package com.sparta.outsourcing_nt.controller;
 import com.sparta.outsourcing_nt.dto.store.req.StoreCreateRequestDto;
 import com.sparta.outsourcing_nt.dto.store.res.StoreResponseDto;
 import com.sparta.outsourcing_nt.service.StoreService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class StoreController {
     private final StoreService storeService;
 
     @PostMapping("/store")
-    public ResponseEntity<StoreResponseDto> createStore(@RequestBody StoreCreateRequestDto reqDto){
+    public ResponseEntity<StoreResponseDto> createStore(@RequestBody @Valid StoreCreateRequestDto reqDto){
         // @AuthenticationPrincipal UserDetailsImpl userDetails
         return ResponseEntity
                 .status(HttpStatus.CREATED)

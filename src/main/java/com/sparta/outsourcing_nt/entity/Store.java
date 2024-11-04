@@ -4,7 +4,6 @@ import com.sparta.outsourcing_nt.dto.store.req.StoreCreateRequestDto;
 import com.sparta.outsourcing_nt.dto.store.res.StoreResponseDto;
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
@@ -12,7 +11,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name = "store")
-@NoArgsConstructor
 @RequiredArgsConstructor
 public class Store extends Timestamped{
     @Id
@@ -53,7 +51,7 @@ public class Store extends Timestamped{
     private String closeTime;
 
     @Column(nullable = false)
-    private String status = "ACTIVE"; // 기본 상태를 ACTIVE로 해도 될지 검토 필요
+    private String status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -75,6 +73,7 @@ public class Store extends Timestamped{
         this.deliveryTip = reqDto.getDeliveryTip();
         this.openTime = reqDto.getOpenTime();
         this.closeTime = reqDto.getCloseTime();
+        this.status = "ACTIVE";
     }
 
     public StoreResponseDto to() {
