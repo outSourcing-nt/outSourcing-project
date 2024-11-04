@@ -35,8 +35,3 @@ out/
 
 ### VS Code ###
 .vscode/
-
-### 빈 폴더 추가용 ###
-!src/main/java/com/sparta/outsourcing_nt/dto/**
-!src/main/java/com/sparta/outsourcing_nt/dto/**/**
-!src/main/java/com/sparta/outsourcing_nt/**
