@@ -1,16 +1,13 @@
 package com.sparta.outsourcing_nt.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
+@Builder
 @Table(name = "user")
-@NoArgsConstructor
 @RequiredArgsConstructor
 public class User extends Timestamped{
     @Id
@@ -29,8 +26,8 @@ public class User extends Timestamped{
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false)
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private UserRole role; // 예: ROLE_USER, ROLE_ADMIN 등
 
     @Column(nullable = false)
     private String address;
