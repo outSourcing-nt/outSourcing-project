@@ -12,7 +12,6 @@ import lombok.Setter;
 @Setter
 @Table(name = "menu")
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class Menu extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,10 +33,11 @@ public class Menu extends Timestamped {
     @JoinColumn(name = "store_id", nullable = false)
     private Store store;
 
-    public Menu(MenuRequestDto requestDto) {
+    public Menu(MenuRequestDto requestDto, Store store) {
         this.category = requestDto.getCategory();
         this.name = requestDto.getName();
         this.price = requestDto.getPrice();
+        this.store = store;
     }
 
     public void updateData(MenuRequestDto requestDto){

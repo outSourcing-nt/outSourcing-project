@@ -16,32 +16,33 @@ public class MenuController {
     private final MenuService menuService;
 
     @PostMapping
-    public ResponseEntity<MenuResponseDto> createMenu(@RequestBody MenuRequestDto requestDto){
+    public ResponseEntity<MenuResponseDto> createMenu(@RequestBody MenuRequestDto requestDto, @PathVariable Long storeId){
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(menuService.createMenu(requestDto));
+                .body(menuService.createMenu(requestDto, storeId));
     }
 
     @GetMapping()
     public ResponseEntity<MenuResponsePage> getAllMenus(@RequestParam(required = false, defaultValue = "0") int page,
                                                         @RequestParam(required = false, defaultValue = "10") int size,
-                                                        @RequestParam(required = false, defaultValue = "modifiedAt") String criteria){
+                                                        @RequestParam(required = false, defaultValue = "modifiedAt") String criteria,
+                                                        @PathVariable Long storeId){
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(menuService.getAllMenus(page, size, criteria));
+                .body(menuService.getAllMenus(page, size, criteria, storeId));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MenuResponseDto> updateMenu(@PathVariable Long id, @RequestBody MenuRequestDto requestDto){
-        menuService.updateMenu(id, requestDto);
+    public ResponseEntity<MenuResponseDto> updateMenu(@PathVariable Long id, @RequestBody MenuRequestDto requestDto, @PathVariable Long storeId){
+        menuService.updateMenu(id, requestDto, storeId);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<MenuResponseDto> deleteMenu(@PathVariable Long id){
-        menuService.deleteMenu(id);
+    public ResponseEntity<MenuResponseDto> deleteMenu(@PathVariable Long id, @PathVariable Long storeId){
+        menuService.deleteMenu(id, storeId);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
