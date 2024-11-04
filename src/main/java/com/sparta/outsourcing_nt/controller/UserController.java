@@ -16,6 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
     private final UserService userService;
 
+    @PostMapping("/users")
+    public ResponseEntity<String> userJoin(@RequestBody UserSignUpRequestDto userSignUpRequestDto) {
+        userService.registerUser(userSignUpRequestDto, UserRole.ROLE_USER);
+        return ResponseEntity.ok("사용자 가입 성공");
+    }
+
     @PostMapping("/owners")
     public ResponseEntity<String> ownerJoin(@RequestBody UserSignUpRequestDto userSignUpRequestDto) {
         userService.registerUser(userSignUpRequestDto, UserRole.ROLE_OWNER);
