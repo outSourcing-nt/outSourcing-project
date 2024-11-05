@@ -1,17 +1,16 @@
 package com.sparta.outsourcing_nt.entity;
 
+import com.sparta.outsourcing_nt.dto.store.req.StoreCreateRequestDto;
+import com.sparta.outsourcing_nt.dto.store.res.StoreResponseDto;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
+@Builder
 @Table(name = "store")
-@NoArgsConstructor
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 public class Store extends Timestamped{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,9 +18,6 @@ public class Store extends Timestamped{
 
     @Column(nullable = false)
     private String name;
-
-    @Column(nullable = false)
-    private int type;
 
     @Column(nullable = false)
     private String category;
@@ -59,4 +55,22 @@ public class Store extends Timestamped{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    public StoreResponseDto toResponseDto() {
+        return new StoreResponseDto(
+                id,
+                name,
+                category,
+                address,
+                phone,
+                content,
+                minDeliveryPrice,
+                deliveryTip,
+                openTime,
+                closeTime,
+                getCreatedAt(),
+                getModifiedAt(),
+                status
+        );
+    }
 }
