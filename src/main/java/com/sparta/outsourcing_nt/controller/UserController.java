@@ -43,11 +43,11 @@ public class UserController {
     }
 
     @DeleteMapping("/users/{userid}")
-    public ResponseEntity<ApiResult<UserDeleteResponseDto>> deleteUser(@RequestBody UserDeleteRequestDto userDeleteRequestDto, @AuthenticationPrincipal AuthUserDetails authUser) {
+    public ResponseEntity<ApiResult<UserDeleteResponseDto>> deleteUser(@RequestBody UserDeleteRequestDto userDeleteRequestDto,@PathVariable Long userId ,@AuthenticationPrincipal AuthUserDetails authUser) {
         return new ResponseEntity<>(
                 ApiResult.success(
                         "회원삭제 성공",
-                        userService.deleteUser(userDeleteRequestDto, authUser)),
+                        userService.deleteUser(userDeleteRequestDto,userId, authUser)),
                 HttpStatus.OK);
 
     }

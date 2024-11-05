@@ -1,6 +1,9 @@
 package com.sparta.outsourcing_nt.config.jwt;
 
+import com.sparta.outsourcing_nt.config.userdetails.AuthUserDetails;
 import com.sparta.outsourcing_nt.config.userdetails.AuthUserDetailsService;
+import com.sparta.outsourcing_nt.exception.ApplicationException;
+import com.sparta.outsourcing_nt.exception.ErrorCode;
 import com.sparta.outsourcing_nt.jwt.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -38,11 +41,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = jwtUtil.resolveToken(request);
         if (token != null && jwtUtil.validateToken(token)) {
             String username = jwtUtil.getUsernameFromToken(token);
-             UserDetails userDetails = authUserDetailsService.loadUserByUsername(username);
-             UsernamePasswordAuthenticationToken authentication =
-                 new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-             SecurityContextHolder.getContext().setAuthentication(authentication);
+            UserDetails userDetails = authUserDetailsService.loadUserByUsername(username);
+            UsernamePasswordAuthenticationToken authentication =
+                    new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            AuthUserDetails authUserDetails = (AuthUserDetails) userDetails;
+
+            //삭제된 아이디 확인 및 예외처리
+            if(authUserDetails.getUser().getDeletedAt() != null) {
+                throw new ApplicationException(ErrorCode.INVALID_FORMAT);
+            }
+
         }
 
         chain.doFilter(request, response);

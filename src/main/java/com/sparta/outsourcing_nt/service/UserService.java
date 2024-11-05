@@ -46,16 +46,18 @@ public class UserService {
     }
 
     @Transactional
-    public UserDeleteResponseDto deleteUser(UserDeleteRequestDto userDeleteRequestDto, AuthUserDetails authUser) {
-        log.info("유저검색전");
+    public UserDeleteResponseDto deleteUser(UserDeleteRequestDto userDeleteRequestDto,Long userId, AuthUserDetails authUser) {
         User user = userRepository.findByEmail(authUser.getUser().getEmail()).orElseThrow(
                 () -> new ApplicationException(ErrorCode.INVALID_FORMAT)); // 로그인 된 유저 정보가 없음
 
-        log.info("유저검색 완료");
-        if(!user.getPassword().equals(passwordEncoder.encode(userDeleteRequestDto.getPassword()))) {
-            new ApplicationException(ErrorCode.INVALID_FORMAT); // 비밀번호 오류
+        // 유저 아이디 검증
+        if(!user.getId().equals(userId) || !authUser.getUser().getId().equals(userId)) {
+            throw new ApplicationException(ErrorCode.INVALID_FORMAT);
         }
-        log.info("비밀번호 통과");
+        // 비밀번호 오류
+        if(!user.getPassword().equals(passwordEncoder.encode(userDeleteRequestDto.getPassword()))) {
+            new ApplicationException(ErrorCode.INVALID_FORMAT);
+        }
         user.setDeletedAt(LocalDateTime.now());
 
         userRepository.save(user);
