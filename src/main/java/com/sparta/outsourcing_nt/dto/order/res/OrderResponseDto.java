@@ -1,6 +1,7 @@
 package com.sparta.outsourcing_nt.dto.order.res;
 
 import com.sparta.outsourcing_nt.entity.Order;
+import com.sparta.outsourcing_nt.entity.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,13 +21,14 @@ public class OrderResponseDto {
     private String statusCode;
     private String message;
 
+
     private List<MenuDto> menu;
 
     public OrderResponseDto(Order order) {
         this.orderId = order.getId();
         this.totalPrice = order.getTotalPrice();
         this.requests = order.getRequests();
-        this.status = order.getStatus();
+        this.status = order.getStatus().getDescription();
         this.storeId = order.getStore().getId();
         this.userId = order.getUser().getId();
     }

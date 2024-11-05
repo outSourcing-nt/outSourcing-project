@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -26,5 +28,10 @@ public class OrderController {
                 return ResponseEntity.status(HttpStatus.CREATED).body(resDto);
     }
 
-
+    // 전체 주문 목록 조회
+    @GetMapping("/store/{storeId}/orders")
+    public ResponseEntity<List<OrderResponseDto>> getOrderList() {
+        List<OrderResponseDto> orderList = orderService.getOrderList();
+        return ResponseEntity.ok(orderList);
+    }
 }
