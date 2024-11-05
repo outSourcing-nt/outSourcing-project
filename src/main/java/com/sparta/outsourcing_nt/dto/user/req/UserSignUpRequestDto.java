@@ -1,5 +1,9 @@
 package com.sparta.outsourcing_nt.dto.user.req;
 
+import com.sparta.outsourcing_nt.entity.User;
+import com.sparta.outsourcing_nt.entity.UserRole;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,10 +12,27 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserSignUpRequestDto {
+    @Email
     private String email;
+
+    @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#\\$%\\^&\\*]).{8,}$",
+            message = "비밀번호는 최소 8자 이상, 대소문자 포함 영문, 숫자, 특수문자를 최소 1글자씩 포함해야 합니다.")
     private String password;
+
     private String name;
+
     private String phone;
+
     private String address;
-    private String status; // 예: "ACTIVE" 또는 "INACTIVE"
+
+    public User toEntity(String password,UserRole userRole) {
+        return User.builder()
+                .email(this.email)
+                .password(password)
+                .name(this.name)
+                .phone(this.phone)
+                .address(this.address)
+                .role(userRole)
+                .build();
+    }
 }

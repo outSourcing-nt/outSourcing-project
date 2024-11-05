@@ -7,8 +7,9 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "user")
-@RequiredArgsConstructor
 public class User extends Timestamped{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,8 +32,5 @@ public class User extends Timestamped{
 
     @Column(nullable = false)
     private String address;
-
-    @Column(nullable = false)
-    private String status;
 
 }
