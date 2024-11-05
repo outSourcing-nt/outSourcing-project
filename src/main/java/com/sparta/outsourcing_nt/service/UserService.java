@@ -4,6 +4,7 @@ import com.sparta.outsourcing_nt.config.userdetails.AuthUserDetails;
 import com.sparta.outsourcing_nt.dto.user.req.UserDeleteRequestDto;
 import com.sparta.outsourcing_nt.dto.user.req.UserSignUpRequestDto;
 import com.sparta.outsourcing_nt.dto.user.res.UserDeleteResponseDto;
+import com.sparta.outsourcing_nt.dto.user.res.UserInfoResponseDto;
 import com.sparta.outsourcing_nt.dto.user.res.UserSignUpResponseDto;
 import com.sparta.outsourcing_nt.entity.User;
 import com.sparta.outsourcing_nt.entity.UserRole;
@@ -13,7 +14,6 @@ import com.sparta.outsourcing_nt.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,5 +63,20 @@ public class UserService {
         userRepository.save(user);
 
         return new UserDeleteResponseDto(user.getId());
+    }
+
+    @Transactional
+    public UserInfoResponseDto findUser(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new ApplicationException(ErrorCode.INVALID_FORMAT)
+        );
+        return new UserInfoResponseDto(user);
+    }
+    @Transactional
+    public UserInfoResponseDto findCurrentUser(AuthUserDetails authUser) {
+        User user = userRepository.findByEmail(authUser.getUser().getEmail()).orElseThrow(
+                () -> new ApplicationException(ErrorCode.INVALID_FORMAT)
+        );
+        return new UserInfoResponseDto(user);
     }
 }

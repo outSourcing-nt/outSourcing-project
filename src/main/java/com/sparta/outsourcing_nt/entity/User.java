@@ -7,8 +7,9 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name = "user")
-@RequiredArgsConstructor
 public class User extends Timestamped{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
