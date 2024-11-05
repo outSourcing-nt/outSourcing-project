@@ -17,7 +17,6 @@ public class OrderResponseDto {
     private String status;
     private Long storeId;
     private Long userId;
-
     private String statusCode;
     private String message;
 
