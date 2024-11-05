@@ -33,7 +33,7 @@ public class UserService {
         String encodedPassword = passwordEncoder.encode(userSignUpRequestDto.getPassword());
 
         // User 객체 생성
-        User user = userSignUpRequestDto.toEntity(userRole);
+        User user = userSignUpRequestDto.toEntity(encodedPassword,userRole);
 
         // 사용자 정보 저장
         userRepository.save(user);

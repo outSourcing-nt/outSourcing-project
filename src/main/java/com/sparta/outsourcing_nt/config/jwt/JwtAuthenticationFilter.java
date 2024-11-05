@@ -22,16 +22,14 @@ import java.io.IOException;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private JwtUtil jwtUtil; // JWT 토큰을 처리하는 클래스
+    private final JwtUtil jwtUtil; // JWT 토큰을 처리하는 클래스
 
-    private AuthenticationManager authenticationManager;
-
-    private AuthUserDetailsService userDetailsService;
+    private final AuthUserDetailsService authUserDetailsService;
 
     @Autowired
     public JwtAuthenticationFilter(JwtUtil jwtUtil, AuthUserDetailsService userDetailsService) {
         this.jwtUtil = jwtUtil;
-        this.userDetailsService = userDetailsService;
+        this.authUserDetailsService = userDetailsService;
     }
 
     @Override
@@ -41,7 +39,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = jwtUtil.resolveToken(request);
         if (token != null && jwtUtil.validateToken(token)) {
             String username = jwtUtil.getUsernameFromToken(token);
-             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+             UserDetails userDetails = authUserDetailsService.loadUserByUsername(username);
              UsernamePasswordAuthenticationToken authentication =
                  new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
              authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

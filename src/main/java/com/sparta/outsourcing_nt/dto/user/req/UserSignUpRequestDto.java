@@ -25,13 +25,13 @@ public class UserSignUpRequestDto {
 
     private String address;
 
-    public User toEntity(UserRole userRole) {
+    public User toEntity(String password,UserRole userRole) {
         return User.builder()
-                .email(email)
+                .email(this.email)
                 .password(password)
-                .name(name)
-                .phone(phone)
-                .address(address)
+                .name(this.name)
+                .phone(this.phone)
+                .address(this.address)
                 .role(userRole)
                 .build();
     }
