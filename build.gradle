@@ -23,7 +23,7 @@ repositories {
     mavenCentral()
 }
 
-dependencies {g
+dependencies {
 
     implementation 'at.favre.lib:bcrypt:0.10.2'
 
