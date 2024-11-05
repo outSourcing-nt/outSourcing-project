@@ -32,7 +32,4 @@ public class User extends Timestamped{
     @Column(nullable = false)
     private String address;
 
-    @Column(nullable = false)
-    private String status;
-
 }
