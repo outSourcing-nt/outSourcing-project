@@ -50,8 +50,9 @@ public class Store extends Timestamped{
     @Column(nullable = false)
     private String closeTime;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String status;
+    private StoreStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
