@@ -1,5 +1,8 @@
 package com.sparta.outsourcing_nt.controller;
 
+import com.sparta.outsourcing_nt.dto.order.req.OrderRequestDto;
+import com.sparta.outsourcing_nt.dto.order.res.OrderResponseDto;
+import com.sparta.outsourcing_nt.entity.User;
 import com.sparta.outsourcing_nt.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +21,7 @@ public class OrderController {
     @PostMapping("/store/{storeId}/order")
     public ResponseEntity<OrderResponseDto> sendOrder(
             @Valid @RequestBody OrderRequestDto reqDto,
-            @RequestAttribute("user" User jwtUser) {
+            @RequestAttribute("user") User jwtUser) {
                 OrderResponseDto resDto = orderService.sendOrder(reqDto, jwtUser);
                 return ResponseEntity.status(HttpStatus.CREATED).body(resDto);
     }

@@ -6,7 +6,7 @@ import lombok.*;
 @Entity
 @Getter
 @Setter
-@Builder
+//@Builder
 @Table(name = "user")
 @RequiredArgsConstructor
 public class User extends Timestamped{
