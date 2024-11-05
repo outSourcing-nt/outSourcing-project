@@ -7,8 +7,8 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Builder
+@AllArgsConstructor
 @Table(name = "user")
 public class User extends Timestamped{
     @Id
@@ -32,5 +32,6 @@ public class User extends Timestamped{
 
     @Column(nullable = false)
     private String address;
+
 
 }

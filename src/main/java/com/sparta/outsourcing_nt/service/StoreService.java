@@ -1,5 +1,6 @@
 package com.sparta.outsourcing_nt.service;
 
+import com.sparta.outsourcing_nt.config.userdetails.AuthUserDetails;
 import com.sparta.outsourcing_nt.dto.store.req.StoreCreateRequestDto;
 import com.sparta.outsourcing_nt.dto.store.req.StoreModifyRequestDto;
 import com.sparta.outsourcing_nt.dto.store.res.StoreResponseDto;

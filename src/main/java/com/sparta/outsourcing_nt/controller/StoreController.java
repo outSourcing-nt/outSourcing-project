@@ -1,7 +1,8 @@
 package com.sparta.outsourcing_nt.controller;
 
-import com.sparta.outsourcing_nt.dto.store.req.StoreModifyRequestDto;
+import com.sparta.outsourcing_nt.config.userdetails.AuthUserDetails;
 import com.sparta.outsourcing_nt.dto.store.req.StoreCreateRequestDto;
+import com.sparta.outsourcing_nt.dto.store.req.StoreModifyRequestDto;
 import com.sparta.outsourcing_nt.dto.store.res.StoreResponseDto;
 import com.sparta.outsourcing_nt.service.StoreService;
 import jakarta.validation.Valid;

@@ -8,9 +8,10 @@ import lombok.*;
 @Entity
 @Getter
 @Setter
-@Builder
 @Table(name = "store")
+@Builder
 @RequiredArgsConstructor
+@AllArgsConstructor
 public class Store extends Timestamped{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
