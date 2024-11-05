@@ -4,6 +4,7 @@ import com.sparta.outsourcing_nt.config.userdetails.AuthUserDetails;
 import com.sparta.outsourcing_nt.dto.user.req.UserDeleteRequestDto;
 import com.sparta.outsourcing_nt.dto.user.req.UserSignUpRequestDto;
 import com.sparta.outsourcing_nt.dto.user.res.UserDeleteResponseDto;
+import com.sparta.outsourcing_nt.dto.user.res.UserInfoResponseDto;
 import com.sparta.outsourcing_nt.dto.user.res.UserSignUpResponseDto;
 import com.sparta.outsourcing_nt.entity.UserRole;
 import com.sparta.outsourcing_nt.service.UserService;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,6 +50,26 @@ public class UserController {
                 ApiResult.success(
                         "회원삭제 성공",
                         userService.deleteUser(userDeleteRequestDto,userId, authUser)),
+                HttpStatus.OK);
+
+    }
+
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<ApiResult<UserInfoResponseDto>> findUser(@PathVariable Long userId) {
+        return new ResponseEntity<>(
+                ApiResult.success(
+                        "회원조회 성공",
+                        userService.findUser(userId)),
+                HttpStatus.OK);
+
+    }
+    @GetMapping("/users")
+    public ResponseEntity<ApiResult<UserInfoResponseDto>> findCurrentUser(@AuthenticationPrincipal AuthUserDetails authUser) {
+        return new ResponseEntity<>(
+                ApiResult.success(
+                        "회원조회 성공",
+                        userService.findCurrentUser(authUser)),
                 HttpStatus.OK);
 
     }
