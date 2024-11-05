@@ -5,6 +5,7 @@ import com.sparta.outsourcing_nt.dto.user.req.UserDeleteRequestDto;
 import com.sparta.outsourcing_nt.dto.user.req.UserSignUpRequestDto;
 import com.sparta.outsourcing_nt.dto.user.res.UserDeleteResponseDto;
 import com.sparta.outsourcing_nt.dto.user.res.UserInfoResponseDto;
+import com.sparta.outsourcing_nt.dto.user.res.UserListResponseDto;
 import com.sparta.outsourcing_nt.dto.user.res.UserSignUpResponseDto;
 import com.sparta.outsourcing_nt.entity.User;
 import com.sparta.outsourcing_nt.entity.UserRole;
@@ -14,6 +15,10 @@ import com.sparta.outsourcing_nt.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,5 +83,12 @@ public class UserService {
                 () -> new ApplicationException(ErrorCode.INVALID_FORMAT)
         );
         return new UserInfoResponseDto(user);
+    }
+
+    @Transactional
+    public UserListResponseDto findAllUsers(int page, int size){
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
+        Page<User> userPage = userRepository.findAll(pageable);
+        return new UserListResponseDto(userPage);
     }
 }

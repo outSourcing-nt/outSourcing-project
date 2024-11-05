@@ -5,6 +5,7 @@ import com.sparta.outsourcing_nt.dto.user.req.UserDeleteRequestDto;
 import com.sparta.outsourcing_nt.dto.user.req.UserSignUpRequestDto;
 import com.sparta.outsourcing_nt.dto.user.res.UserDeleteResponseDto;
 import com.sparta.outsourcing_nt.dto.user.res.UserInfoResponseDto;
+import com.sparta.outsourcing_nt.dto.user.res.UserListResponseDto;
 import com.sparta.outsourcing_nt.dto.user.res.UserSignUpResponseDto;
 import com.sparta.outsourcing_nt.entity.UserRole;
 import com.sparta.outsourcing_nt.service.UserService;
@@ -64,7 +65,7 @@ public class UserController {
                 HttpStatus.OK);
 
     }
-    @GetMapping("/users")
+    @GetMapping("/current-user")
     public ResponseEntity<ApiResult<UserInfoResponseDto>> findCurrentUser(@AuthenticationPrincipal AuthUserDetails authUser) {
         return new ResponseEntity<>(
                 ApiResult.success(
@@ -73,4 +74,17 @@ public class UserController {
                 HttpStatus.OK);
 
     }
+
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/users")
+    public ResponseEntity<ApiResult<UserListResponseDto>> findAllUsers(@RequestParam(required = false, defaultValue = "0") int page,
+                                                                       @RequestParam(required = false, defaultValue = "10") int size) {
+        return new ResponseEntity<>(
+                ApiResult.success(
+                        "회원조회 성공",
+                        userService.findAllUsers(page,size)),
+                HttpStatus.OK);
+
+    }
+
 }
