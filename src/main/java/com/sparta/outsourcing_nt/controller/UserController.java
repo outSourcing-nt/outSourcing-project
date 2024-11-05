@@ -42,7 +42,7 @@ public class UserController {
 
     }
 
-    @DeleteMapping("/users/{userid}")
+    @DeleteMapping("/users/{userId}")
     public ResponseEntity<ApiResult<UserDeleteResponseDto>> deleteUser(@RequestBody UserDeleteRequestDto userDeleteRequestDto,@PathVariable Long userId ,@AuthenticationPrincipal AuthUserDetails authUser) {
         return new ResponseEntity<>(
                 ApiResult.success(
