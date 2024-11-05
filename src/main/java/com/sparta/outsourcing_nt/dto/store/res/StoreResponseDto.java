@@ -3,7 +3,6 @@ package com.sparta.outsourcing_nt.dto.store.res;
 import com.sparta.outsourcing_nt.entity.StoreStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 
