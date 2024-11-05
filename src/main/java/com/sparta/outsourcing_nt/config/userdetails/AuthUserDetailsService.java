@@ -21,6 +21,9 @@ public class AuthUserDetailsService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }
+        if (user.getDeletedAt() != null) {
+            throw new UsernameNotFoundException("User is deleted");
+        }
 
         return new AuthUserDetails(
                 user,
