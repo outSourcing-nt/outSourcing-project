@@ -3,6 +3,7 @@ package com.sparta.outsourcing_nt.service;
 import com.sparta.outsourcing_nt.dto.order.req.OrderRequestDto;
 import com.sparta.outsourcing_nt.dto.order.res.OrderResponseDto;
 import com.sparta.outsourcing_nt.entity.Order;
+import com.sparta.outsourcing_nt.entity.OrderStatus;
 import com.sparta.outsourcing_nt.entity.Store;
 import com.sparta.outsourcing_nt.entity.User;
 import com.sparta.outsourcing_nt.repository.OrderRepository;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +43,7 @@ public class OrderService {
         Order order = new Order();
         order.setTotalPrice(reqDto.getTotalPrice());
         order.setRequests(reqDto.getRequests());
-        order.setStatus("ORDERED"); // 초기 상태 설정
+        order.setStatus(OrderStatus.PREPARING); // 초기 상태 설정
         order.setUser(jwtUser);
         order.setStore(store);
 
@@ -76,8 +79,15 @@ public class OrderService {
         System.out.println("Order ID: " + order.getId());
     }
 
-    // 주문 ID 생성 메서드 (간단한 예시)
-    private String generateOrderId() {
-        return "ORD" + System.currentTimeMillis();
+    public List<OrderResponseDto> getOrderList() {
+        // Order 엔티티 목록을 조회
+        List<Order> orders = orderRepository.findAll();
+
+        // Order 엔티티 목록을 OrderResponseDto로 변환
+        return orders.stream()
+                .map(OrderResponseDto::new)
+                .collect(Collectors.toList());
     }
+
+
 }
