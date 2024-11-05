@@ -2,6 +2,7 @@ package com.sparta.outsourcing_nt.controller;
 
 import com.sparta.outsourcing_nt.dto.order.req.OrderRequestDto;
 import com.sparta.outsourcing_nt.dto.order.res.OrderResponseDto;
+import com.sparta.outsourcing_nt.entity.Order;
 import com.sparta.outsourcing_nt.entity.User;
 import com.sparta.outsourcing_nt.service.OrderService;
 import jakarta.validation.Valid;
@@ -9,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,5 +29,17 @@ public class OrderController {
                 return ResponseEntity.status(HttpStatus.CREATED).body(resDto);
     }
 
+    // 전체 주문 목록 조회
+    @GetMapping("/store/{storeId}/orders")
+    public ResponseEntity<List<OrderResponseDto>> getOrderList() {
+        List<OrderResponseDto> orderList = orderService.getOrderList();
+        return ResponseEntity.ok(orderList);
+    }
 
+    // 특정 주문 상세 정보 조회
+    @GetMapping("/order/{orderId}")
+    public ResponseEntity<OrderResponseDto> getOrderById(@PathVariable Long orderId) {
+        OrderResponseDto orderDetails = orderService.getOrderById(orderId);
+        return ResponseEntity.ok(orderDetails);
+    }
 }

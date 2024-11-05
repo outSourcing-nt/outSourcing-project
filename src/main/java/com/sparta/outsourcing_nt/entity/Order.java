@@ -9,9 +9,8 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "order")
+@Table(name = "orders")
 @NoArgsConstructor
-//@RequiredArgsConstructor
 public class Order extends Timestamped{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +23,7 @@ public class Order extends Timestamped{
     private String requests;
 
     @Column(nullable = false)
-    private String status;
+    private OrderStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
