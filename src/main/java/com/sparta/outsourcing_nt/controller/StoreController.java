@@ -3,6 +3,7 @@ package com.sparta.outsourcing_nt.controller;
 import com.sparta.outsourcing_nt.config.userdetails.AuthUserDetails;
 import com.sparta.outsourcing_nt.dto.store.req.StoreModifyRequestDto;
 import com.sparta.outsourcing_nt.dto.store.req.StoreCreateRequestDto;
+import com.sparta.outsourcing_nt.dto.store.res.StoreDeleteDto;
 import com.sparta.outsourcing_nt.dto.store.res.StoreListResponseDto;
 import com.sparta.outsourcing_nt.dto.store.res.StoreResponseDto;
 import com.sparta.outsourcing_nt.service.StoreService;
@@ -57,5 +58,11 @@ public class StoreController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(storeService.getStore(storeId));
+    }
+
+    @DeleteMapping("/store/{storeId}")
+    public ResponseEntity<StoreDeleteDto> deleteStore(@PathVariable Long storeId, @AuthenticationPrincipal AuthUserDetails authUser) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(storeService.deleteStore(storeId, authUser));
     }
 }
