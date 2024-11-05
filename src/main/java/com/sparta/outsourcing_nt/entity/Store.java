@@ -1,6 +1,6 @@
 package com.sparta.outsourcing_nt.entity;
 
-import com.sparta.outsourcing_nt.dto.store.req.StoreCreateRequestDto;
+import com.sparta.outsourcing_nt.dto.store.req.StoreModifyRequestDto;
 import com.sparta.outsourcing_nt.dto.store.res.StoreResponseDto;
 import jakarta.persistence.*;
 import lombok.*;
@@ -49,8 +49,9 @@ public class Store extends Timestamped{
     @Column(nullable = false)
     private String closeTime;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String status;
+    private StoreStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -72,5 +73,17 @@ public class Store extends Timestamped{
                 getModifiedAt(),
                 status
         );
+    }
+
+    public void modifyData(StoreModifyRequestDto reqDto) {
+        this.name = reqDto.getName();
+        this.category = reqDto.getCategory();
+        this.address = reqDto.getAddress();
+        this.phone = reqDto.getPhone();
+        this.content = reqDto.getContent();
+        this.minDeliveryPrice = reqDto.getMinDeliveryPrice();
+        this.deliveryTip = reqDto.getDeliveryTip();
+        this.openTime = reqDto.getOpenTime();
+        this.closeTime = reqDto.getCloseTime();
     }
 }

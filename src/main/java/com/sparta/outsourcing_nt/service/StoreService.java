@@ -1,11 +1,15 @@
 package com.sparta.outsourcing_nt.service;
 
 import com.sparta.outsourcing_nt.dto.store.req.StoreCreateRequestDto;
+import com.sparta.outsourcing_nt.dto.store.req.StoreModifyRequestDto;
 import com.sparta.outsourcing_nt.dto.store.res.StoreResponseDto;
 import com.sparta.outsourcing_nt.entity.Store;
+import com.sparta.outsourcing_nt.entity.User;
+import com.sparta.outsourcing_nt.exception.ApplicationException;
+import com.sparta.outsourcing_nt.exception.ErrorCode;
 import com.sparta.outsourcing_nt.repository.StoreRepository;
+import com.sparta.outsourcing_nt.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,10 +17,35 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class StoreService {
     private final StoreRepository storeRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public StoreResponseDto createStore(StoreCreateRequestDto reqDto) {
         Store store = storeRepository.save(reqDto.toEntity());
         return store.toResponseDto();
+    }
+
+    @Transactional
+    public StoreResponseDto modifyStore(Long storeId, StoreModifyRequestDto reqDto, AuthUserDetails authUser) {
+        User user = userRepository.findByEmail(authUser.getUser().getEmail()).orElseThrow(
+                () -> new ApplicationException(ErrorCode.INVALID_FORMAT)); // 로그인 된 유저 정보가 없음
+
+        Store store = findStoreById(storeId);
+
+        // 가게 소유자의 id와 일치하는지 확인
+        if(!store.getUser().getId().equals(authUser.getUser().getId())) {
+            throw new ApplicationException(ErrorCode.INVALID_FORMAT);
+        }
+
+        store.modifyData(reqDto);
+
+        return store.toResponseDto();
+    }
+
+
+    private Store findStoreById(Long storeId) {
+        return storeRepository.findById(storeId).orElseThrow(
+                () -> new ApplicationException(ErrorCode.INVALID_FORMAT)
+        );
     }
 }
