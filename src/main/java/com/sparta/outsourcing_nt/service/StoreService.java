@@ -59,6 +59,14 @@ public class StoreService {
         return new StoreListResponseDto(slice);
     }
 
+    public StoreResponseDto getStore(Long storeId) {
+        Store store = storeRepository.findById(storeId).orElseThrow(
+                () -> new ApplicationException(ErrorCode.INVALID_FORMAT)
+        );
+
+        return store.toResponseDto();
+    }
+
 
     private Store findStoreById(Long storeId) {
         return storeRepository.findById(storeId).orElseThrow(
