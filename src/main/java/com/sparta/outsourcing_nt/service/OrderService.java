@@ -89,5 +89,12 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
+    // 주문 ID로 주문 상세 정보 조회
+    public OrderResponseDto getOrderById(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 주문을 찾을 수 없습니다. 주문 ID: " + orderId));
+        return new OrderResponseDto(order);
+    }
+
 
 }

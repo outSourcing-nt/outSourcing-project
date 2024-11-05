@@ -2,6 +2,7 @@ package com.sparta.outsourcing_nt.controller;
 
 import com.sparta.outsourcing_nt.dto.order.req.OrderRequestDto;
 import com.sparta.outsourcing_nt.dto.order.res.OrderResponseDto;
+import com.sparta.outsourcing_nt.entity.Order;
 import com.sparta.outsourcing_nt.entity.User;
 import com.sparta.outsourcing_nt.service.OrderService;
 import jakarta.validation.Valid;
@@ -33,5 +34,12 @@ public class OrderController {
     public ResponseEntity<List<OrderResponseDto>> getOrderList() {
         List<OrderResponseDto> orderList = orderService.getOrderList();
         return ResponseEntity.ok(orderList);
+    }
+
+    // 특정 주문 상세 정보 조회
+    @GetMapping("/order/{orderId}")
+    public ResponseEntity<OrderResponseDto> getOrderById(@PathVariable Long orderId) {
+        OrderResponseDto orderDetails = orderService.getOrderById(orderId);
+        return ResponseEntity.ok(orderDetails);
     }
 }
