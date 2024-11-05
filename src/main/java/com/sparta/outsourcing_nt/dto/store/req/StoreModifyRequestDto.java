@@ -2,11 +2,14 @@ package com.sparta.outsourcing_nt.dto.store.req;
 
 import com.sparta.outsourcing_nt.entity.Store;
 import com.sparta.outsourcing_nt.entity.StoreStatus;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
 @Getter
-public class StoreCreateRequestDto {
+public class StoreModifyRequestDto {
     @NotEmpty(message = "가게 이름은 필수 입력 항목입니다.")
     @Size(min = 1, max = 20, message = "가게 이름은 1글자 이상, 20글자 이하여야 합니다.")
     private String name;
