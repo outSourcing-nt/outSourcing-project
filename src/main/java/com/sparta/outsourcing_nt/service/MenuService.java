@@ -32,7 +32,7 @@ public class MenuService {
     public MenuResponsePage getAllMenus(int page, int size, String criteria, Long storeId) {
         Store store = storeRepository.findById(storeId).orElseThrow(() -> new IllegalArgumentException("Store not found with id: " + storeId));
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, criteria));
-        Page<Menu> menus = menuRepository.findByStore(store, pageable);
+        Page<Menu> menus = menuRepository.findByStoreAndDeletedAtIsNull(store, pageable);
         return new MenuResponsePage(menus);
     }
 
@@ -46,7 +46,7 @@ public class MenuService {
     @Transactional
     public void deleteMenu(Long id, Long storeId) {
         storeRepository.findById(storeId).orElseThrow(() -> new IllegalArgumentException("Store not found with id: " + storeId));
-        menuRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Menu not found with id: " + id));
-        menuRepository.deleteById(id);
+        Menu menu = menuRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Menu not found with id: " + id));
+        menu.softDelete();
     }
 }
