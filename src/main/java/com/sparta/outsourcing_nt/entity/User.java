@@ -8,7 +8,6 @@ import lombok.*;
 @Setter
 @Builder
 @NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "user")
 public class User extends Timestamped{
     @Id
