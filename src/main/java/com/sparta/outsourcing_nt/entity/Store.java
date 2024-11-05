@@ -11,6 +11,7 @@ import lombok.*;
 @Builder
 @Table(name = "store")
 @RequiredArgsConstructor
+@AllArgsConstructor
 public class Store extends Timestamped{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
