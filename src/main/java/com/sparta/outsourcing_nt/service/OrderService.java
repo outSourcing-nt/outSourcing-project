@@ -96,5 +96,38 @@ public class OrderService {
         return new OrderResponseDto(order);
     }
 
+    // 주문 상태 업데이트
+    public OrderResponseDto updateOrderStatus(Long storeId, Long orderId, OrderStatus status) {
+
+        //Store가 존재하는지 확인
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 가게를 찾을 수 없습니다."));
+
+        //Order가 존재하는지 확인
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(()-> new IllegalArgumentException("해당 주문을 찾을 수 없습니다."));
+
+
+
+        OrderStatus orderStatus = parseOrderStatus(String.valueOf(status));
+        // 상태 업데이트
+        order.setStatus(orderStatus);
+        Order updatedOrder = orderRepository.save(order);
+
+        //상태 변경 시 로그 기록
+        logOrderAction("ORDER_STATUS_UPDATED", updatedOrder);
+
+        return new OrderResponseDto(updatedOrder);
+
+
+    }
+
+    private OrderStatus parseOrderStatus(String status) {
+        try {
+            return OrderStatus.valueOf(status.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("잘못된 주문 상태입니다: " + status);
+        }
+    }
 
 }
