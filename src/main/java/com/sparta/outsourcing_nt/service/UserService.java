@@ -1,6 +1,7 @@
 package com.sparta.outsourcing_nt.service;
 
 import com.sparta.outsourcing_nt.dto.user.req.UserSignUpRequestDto;
+import com.sparta.outsourcing_nt.dto.user.res.UserSignUpResponseDto;
 import com.sparta.outsourcing_nt.entity.User;
 import com.sparta.outsourcing_nt.entity.UserRole;
 import com.sparta.outsourcing_nt.exception.ApplicationException;
@@ -23,7 +24,7 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     @Transactional
-    public void registerUser(UserSignUpRequestDto userSignUpRequestDto,UserRole userRole) {
+    public UserSignUpResponseDto registerUser(UserSignUpRequestDto userSignUpRequestDto, UserRole userRole) {
 
         if(userRepository.findByEmail(userSignUpRequestDto.getEmail()).isPresent()) {
             throw new ApplicationException(ErrorCode.INVALID_FORMAT);
@@ -32,10 +33,9 @@ public class UserService {
         // 비밀번호 해싱
         String encodedPassword = passwordEncoder.encode(userSignUpRequestDto.getPassword());
 
-        // User 객체 생성
-        User user = userSignUpRequestDto.toEntity(encodedPassword,userRole);
+        // User 객체 생성 및 저장
+        User user = userRepository.save(userSignUpRequestDto.toEntity(encodedPassword,userRole));
 
-        // 사용자 정보 저장
-        userRepository.save(user);
+        return new UserSignUpResponseDto(user);
     }
 }
