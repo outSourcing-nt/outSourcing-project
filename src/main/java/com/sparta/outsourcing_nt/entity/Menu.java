@@ -12,6 +12,7 @@ import lombok.Setter;
 @Setter
 @Table(name = "menu")
 @NoArgsConstructor
+//@RequiredArgsConstructor
 public class Menu extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
