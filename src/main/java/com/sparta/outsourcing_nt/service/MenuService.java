@@ -1,5 +1,6 @@
 package com.sparta.outsourcing_nt.service;
 
+import com.sparta.outsourcing_nt.config.userdetails.AuthUserDetails;
 import com.sparta.outsourcing_nt.dto.menu.req.MenuRequestDto;
 import com.sparta.outsourcing_nt.dto.menu.res.MenuResponseDto;
 import com.sparta.outsourcing_nt.dto.menu.res.MenuResponsePage;
@@ -22,7 +23,7 @@ public class MenuService {
     private final StoreRepository storeRepository;
 
     @Transactional
-    public MenuResponseDto createMenu(MenuRequestDto requestDto, Long storeId) {
+    public MenuResponseDto createMenu(MenuRequestDto requestDto, Long storeId, AuthUserDetails authUser) {
         Store store = storeRepository.findById(storeId).orElseThrow(() -> new IllegalArgumentException("Store not found with id: " + storeId));
         Menu menu = new Menu(requestDto, store);
         Menu saveMenu = menuRepository.save(menu);
@@ -37,16 +38,20 @@ public class MenuService {
     }
 
     @Transactional
-    public void updateMenu(Long id, MenuRequestDto requestDto, Long storeId) {
+    public MenuResponseDto updateMenu(Long id, MenuRequestDto requestDto, Long storeId) {
         storeRepository.findById(storeId).orElseThrow(() -> new IllegalArgumentException("Store not found with id: " + storeId));
         Menu menu = menuRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Menu not found with id: " + id));
         menu.updateData(requestDto);
+
+        return new MenuResponseDto(menu);
     }
 
     @Transactional
-    public void deleteMenu(Long id, Long storeId) {
+    public MenuResponseDto deleteMenu(Long id, Long storeId) {
         storeRepository.findById(storeId).orElseThrow(() -> new IllegalArgumentException("Store not found with id: " + storeId));
         Menu menu = menuRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Menu not found with id: " + id));
         menu.softDelete();
+
+        return new MenuResponseDto(menu);
     }
 }
