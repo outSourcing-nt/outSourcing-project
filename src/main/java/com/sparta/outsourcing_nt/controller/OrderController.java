@@ -31,7 +31,7 @@ public class OrderController {
     public ResponseEntity<ApiResult<OrderResponseDto>> sendOrder(
             @Valid @RequestBody OrderRequestDto reqDto) {
 
-                return new ResponseEntity(
+                return new ResponseEntity<>(
                         ApiResult.success("주문하기 성공",
                                 orderService.sendOrder(reqDto)),
                         HttpStatus.OK);
@@ -40,7 +40,7 @@ public class OrderController {
     // 전체 주문 목록 조회
     @GetMapping("/store/{storeId}/orders")
     public ResponseEntity<ApiResult<List<OrderResponseDto>>> getOrderList() {
-        return new ResponseEntity(
+        return new ResponseEntity<>(
                 ApiResult.success("전체 주문 목록 조회하기 성공",
                         orderService.getOrderList()),
                 HttpStatus.OK);
@@ -50,7 +50,7 @@ public class OrderController {
     // 특정 주문 상세 정보 조회
     @GetMapping("/order/{orderId}")
     public ResponseEntity<ApiResult<OrderResponseDto>> getOrderById(@PathVariable Long orderId) {
-        return new ResponseEntity(
+        return new ResponseEntity<>(
                 ApiResult.success("특정 주문 상세 정보 조회하기 성공",
                         orderService.getOrderById(orderId)),
                 HttpStatus.OK);
@@ -71,7 +71,7 @@ public class OrderController {
             throw new IllegalArgumentException("잘못된 주문 상태입니다: " + requestDto.getStatus());
         }
 
-        return new ResponseEntity(
+        return new ResponseEntity<>(
                 ApiResult.success("주문 상태 수정하기 성공",
                         orderService.updateOrderStatus(storeId, orderId, status)),
                 HttpStatus.OK);
