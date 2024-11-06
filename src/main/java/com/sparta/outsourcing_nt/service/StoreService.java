@@ -7,6 +7,7 @@ import com.sparta.outsourcing_nt.dto.store.res.StoreDeleteDto;
 import com.sparta.outsourcing_nt.dto.store.res.StoreListResponseDto;
 import com.sparta.outsourcing_nt.dto.store.res.StoreResponseDto;
 import com.sparta.outsourcing_nt.entity.Store;
+import com.sparta.outsourcing_nt.entity.StoreStatus;
 import com.sparta.outsourcing_nt.entity.User;
 import com.sparta.outsourcing_nt.exception.ApplicationException;
 import com.sparta.outsourcing_nt.exception.ErrorCode;
@@ -71,6 +72,10 @@ public class StoreService {
         Store store = storeRepository.findById(storeId).orElseThrow(
                 () -> new ApplicationException(ErrorCode.INVALID_FORMAT)
         );
+
+        if (store.getStatus() == StoreStatus.CLOSED){
+            throw new ApplicationException(ErrorCode.INVALID_FORMAT);
+        }
 
         return store.toResponseDto();
     }
