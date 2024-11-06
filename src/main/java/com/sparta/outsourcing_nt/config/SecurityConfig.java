@@ -5,6 +5,7 @@ import com.sparta.outsourcing_nt.config.oauth.CustomOAuth2UserService;
 import com.sparta.outsourcing_nt.config.oauth.OAuth2LoginFailureHandler;
 import com.sparta.outsourcing_nt.config.oauth.OAuth2LoginSuccessHandler;
 import com.sparta.outsourcing_nt.config.userdetails.AuthUserDetailsService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 
 @Configuration
 @EnableWebSecurity
@@ -56,7 +58,14 @@ public class SecurityConfig {
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(customOAuth2UserService)
                         )
-                );
+                )
+                .exceptionHandling()
+                    .authenticationEntryPoint((request, response, authException) -> {
+                        // 인증되지 않은 사용자가 접근할 경우 401 오류 코드와 메시지 반환
+                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                        response.getWriter().write("Unauthorized access - Please login first.");
+                    });
+
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
