@@ -51,7 +51,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             //삭제된 아이디 확인 및 예외처리
             if(authUserDetails.getUser().getDeletedAt() != null) {
-                throw new ApplicationException(ErrorCode.INVALID_FORMAT);
+                throw new ApplicationException(ErrorCode.DELETED_USER);
             }
 
         }

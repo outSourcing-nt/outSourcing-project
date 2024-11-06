@@ -35,7 +35,7 @@ public class StoreService {
     @Transactional
     public StoreResponseDto createStore(StoreCreateRequestDto reqDto, AuthUserDetails authUser) {
         User user = userRepository.findByEmail(authUser.getUser().getEmail()).orElseThrow(
-                () -> new ApplicationException(ErrorCode.INVALID_FORMAT)); // 로그인 된 유저 정보가 없음
+                () -> new ApplicationException(ErrorCode.NOT_FOUND_STORE)); // 로그인 된 유저 정보가 없음
 
         // 사용자가 소유한 가게의 수를 조회
         long storeCount = storeRepository.countByUser(user);
@@ -55,13 +55,13 @@ public class StoreService {
     @Transactional
     public StoreResponseDto modifyStore(Long storeId, StoreModifyRequestDto reqDto, AuthUserDetails authUser) {
         User user = userRepository.findByEmail(authUser.getUser().getEmail()).orElseThrow(
-                () -> new ApplicationException(ErrorCode.INVALID_FORMAT)); // 로그인 된 유저 정보가 없음
+                () -> new ApplicationException(ErrorCode.NOT_FOUND_STORE)); // 로그인 된 유저 정보가 없음
 
         Store store = findStoreById(storeId);
 
         // 가게 소유자의 id와 일치하는지 확인
         if (!store.getUser().getId().equals(user.getId())) {
-            throw new ApplicationException(ErrorCode.INVALID_FORMAT);
+            throw new ApplicationException(ErrorCode.NONE_PERMISSION);
         }
 
         store.modifyData(reqDto);
@@ -79,7 +79,7 @@ public class StoreService {
         }
 
         if (slice.isEmpty() && pageable.getPageNumber() > 0) {
-            throw new ApplicationException(ErrorCode.INVALID_FORMAT);
+            throw new ApplicationException(ErrorCode.NOT_FOUND);
         }
 
         return new StoreListResponseDto(slice);
@@ -87,11 +87,11 @@ public class StoreService {
 
     public StoreSingleResponseDto getStore(Long storeId) {
         Store store = storeRepository.findById(storeId).orElseThrow(
-                () -> new ApplicationException(ErrorCode.INVALID_FORMAT)
+                () -> new ApplicationException(ErrorCode.NOT_FOUND_STORE)
         );
 
-        if (store.getStatus() == StoreStatus.CLOSED) {
-            throw new ApplicationException(ErrorCode.INVALID_FORMAT);
+        if (store.getStatus() == StoreStatus.CLOSED){
+            throw new ApplicationException(ErrorCode.CLOSED_STORE);
         }
 
         List<Menu> menuList = menuRepository.findAllByStoreId(storeId);
@@ -102,13 +102,13 @@ public class StoreService {
     @Transactional
     public StoreDeleteDto deleteStore(Long storeId, AuthUserDetails authUser) {
         User user = userRepository.findByEmail(authUser.getUser().getEmail()).orElseThrow(
-                () -> new ApplicationException(ErrorCode.INVALID_FORMAT)); // 로그인 된 유저 정보가 없음
+                () -> new ApplicationException(ErrorCode.NOT_FOUND_USER)); // 로그인 된 유저 정보가 없음
 
         Store store = findStoreById(storeId);
 
         // 가게 소유자의 id와 일치하는지 확인
         if (!store.getUser().getId().equals(user.getId())) {
-            throw new ApplicationException(ErrorCode.INVALID_FORMAT);
+            throw new ApplicationException(ErrorCode.UNAUTHRIZED_USER);
         }
 
         store.close();
@@ -119,7 +119,7 @@ public class StoreService {
 
     private Store findStoreById(Long storeId) {
         return storeRepository.findById(storeId).orElseThrow(
-                () -> new ApplicationException(ErrorCode.INVALID_FORMAT)
+                () -> new ApplicationException(ErrorCode.NOT_FOUND_STORE)
         );
     }
 }

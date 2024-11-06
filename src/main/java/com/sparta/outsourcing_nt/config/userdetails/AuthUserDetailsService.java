@@ -1,6 +1,8 @@
 package com.sparta.outsourcing_nt.config.userdetails;
 
 import com.sparta.outsourcing_nt.entity.User;
+import com.sparta.outsourcing_nt.exception.ApplicationException;
+import com.sparta.outsourcing_nt.exception.ErrorCode;
 import com.sparta.outsourcing_nt.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,10 +21,10 @@ public class AuthUserDetailsService implements UserDetailsService {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(email));
 
         if (user == null) {
-            throw new UsernameNotFoundException("User not found");
+            throw new ApplicationException(ErrorCode.UNAUTHRIZED_USER);
         }
         if (user.getDeletedAt() != null) {
-            throw new UsernameNotFoundException("User is deleted");
+            throw new ApplicationException(ErrorCode.DELETED_USER);
         }
 
         return new AuthUserDetails(

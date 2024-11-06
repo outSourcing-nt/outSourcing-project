@@ -38,7 +38,7 @@ public class UserService {
     public UserSignUpResponseDto registerUser(UserSignUpRequestDto userSignUpRequestDto, UserRole userRole) {
 
         if(userRepository.findByEmail(userSignUpRequestDto.getEmail()).isPresent()) {
-            throw new ApplicationException(ErrorCode.INVALID_FORMAT);
+            throw new ApplicationException(ErrorCode.NOT_FOUND_USER);
         }
 
         // 비밀번호 해싱
@@ -53,15 +53,15 @@ public class UserService {
     @Transactional
     public UserDeleteResponseDto deleteUser(UserDeleteRequestDto userDeleteRequestDto,Long userId, AuthUserDetails authUser) {
         User user = userRepository.findByEmail(authUser.getUser().getEmail()).orElseThrow(
-                () -> new ApplicationException(ErrorCode.INVALID_FORMAT)); // 로그인 된 유저 정보가 없음
+                () -> new ApplicationException(ErrorCode.NOT_FOUND_USER)); // 로그인 된 유저 정보가 없음
 
         // 유저 아이디 검증
         if(!user.getId().equals(userId) || !authUser.getUser().getId().equals(userId)) {
-            throw new ApplicationException(ErrorCode.INVALID_FORMAT);
+            throw new ApplicationException(ErrorCode.UNAUTHRIZED_USER);
         }
         // 비밀번호 오류
         if(!user.getPassword().equals(passwordEncoder.encode(userDeleteRequestDto.getPassword()))) {
-            new ApplicationException(ErrorCode.INVALID_FORMAT);
+            new ApplicationException(ErrorCode.UNAUTHRIZED_USER);
         }
         user.setDeletedAt(LocalDateTime.now());
 
@@ -73,14 +73,14 @@ public class UserService {
     @Transactional
     public UserInfoResponseDto findUser(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new ApplicationException(ErrorCode.INVALID_FORMAT)
+                () -> new ApplicationException(ErrorCode.NOT_FOUND_USER)
         );
         return new UserInfoResponseDto(user);
     }
     @Transactional
     public UserInfoResponseDto findCurrentUser(AuthUserDetails authUser) {
         User user = userRepository.findByEmail(authUser.getUser().getEmail()).orElseThrow(
-                () -> new ApplicationException(ErrorCode.INVALID_FORMAT)
+                () -> new ApplicationException(ErrorCode.NOT_FOUND_USER)
         );
         return new UserInfoResponseDto(user);
     }
