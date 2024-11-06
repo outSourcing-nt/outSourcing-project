@@ -72,7 +72,7 @@ public class OrderController {
         }
 
         return new ResponseEntity(
-                ApiResult.success("전체 주문 목록 조회하기 성공",
+                ApiResult.success("주문 상태 수정하기 성공",
                         orderService.updateOrderStatus(storeId, orderId, status)),
                 HttpStatus.OK);
     }
