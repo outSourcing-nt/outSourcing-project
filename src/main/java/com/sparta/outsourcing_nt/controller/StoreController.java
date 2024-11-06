@@ -45,10 +45,17 @@ public class StoreController {
 
     @GetMapping("/store")
     public ResponseEntity<StoreListResponseDto> getAllStores(
-            @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC ) Pageable pageable
-            ) {
+            @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable
+    ) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(storeService.getAllStores(pageable));
+    }
+
+    @GetMapping("/store/{storeId}")
+    public ResponseEntity<StoreResponseDto> getStore(@PathVariable Long storeId) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(storeService.getStore(storeId));
     }
 }
