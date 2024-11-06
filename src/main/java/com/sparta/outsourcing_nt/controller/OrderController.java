@@ -1,5 +1,6 @@
 package com.sparta.outsourcing_nt.controller;
 
+import com.sparta.outsourcing_nt.config.userdetails.AuthUserDetails;
 import com.sparta.outsourcing_nt.dto.order.req.OrderRequestDto;
 import com.sparta.outsourcing_nt.dto.order.req.OrderStatusUpdateRequestDto;
 import com.sparta.outsourcing_nt.dto.order.res.OrderResponseDto;
@@ -11,6 +12,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,9 +28,9 @@ public class OrderController {
     //주문하기
     @PostMapping("/store/{storeId}/order")
     public ResponseEntity<OrderResponseDto> sendOrder(
-            @Valid @RequestBody OrderRequestDto reqDto,
-            @RequestAttribute("user") User jwtUser) {
-                OrderResponseDto resDto = orderService.sendOrder(reqDto, jwtUser);
+            @Valid @RequestBody OrderRequestDto reqDto) {
+
+                OrderResponseDto resDto = orderService.sendOrder(reqDto);
                 return ResponseEntity.status(HttpStatus.CREATED).body(resDto);
     }
 

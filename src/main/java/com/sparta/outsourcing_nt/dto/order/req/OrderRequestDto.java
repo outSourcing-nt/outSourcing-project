@@ -3,12 +3,15 @@ package com.sparta.outsourcing_nt.dto.order.req;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class OrderRequestDto {
 
@@ -25,6 +28,8 @@ public class OrderRequestDto {
     @NotNull(message = "메뉴 항목을 입력해 주세요.")
     private List<MenuItem> menuItems;
 
+
+    @Setter
     @Getter
     @NoArgsConstructor
     public static class MenuItem {

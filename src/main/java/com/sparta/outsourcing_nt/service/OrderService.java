@@ -1,16 +1,17 @@
 package com.sparta.outsourcing_nt.service;
 
+import com.sparta.outsourcing_nt.config.userdetails.AuthUserDetails;
 import com.sparta.outsourcing_nt.dto.order.req.OrderRequestDto;
 import com.sparta.outsourcing_nt.dto.order.res.OrderResponseDto;
-import com.sparta.outsourcing_nt.entity.Order;
-import com.sparta.outsourcing_nt.entity.OrderStatus;
-import com.sparta.outsourcing_nt.entity.Store;
-import com.sparta.outsourcing_nt.entity.User;
-import com.sparta.outsourcing_nt.repository.OrderRepository;
-import com.sparta.outsourcing_nt.repository.StoreRepository;
+import com.sparta.outsourcing_nt.entity.*;
+import com.sparta.outsourcing_nt.repository.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -24,8 +25,15 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final StoreRepository storeRepository;
+    private final OrderMenuRepository orderMenuRepository;
+    private final MenuRepository menuRepository;
 
-    public OrderResponseDto sendOrder(@Valid OrderRequestDto reqDto, User jwtUser) {
+    public OrderResponseDto sendOrder(OrderRequestDto reqDto) {
+        // 현재 로그인한 사용자 정보를 SecurityContext에서 가져옵니다.
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User jwtUser = ((AuthUserDetails) userDetails).getUser();  // AuthUserDetails에서 User 객체를 추출
+
+
         Store store = storeRepository.findById(reqDto.getStoreId())
                 .orElseThrow(() -> new IllegalArgumentException("가게를 찾을 수 없습니다."));
 
@@ -45,8 +53,24 @@ public class OrderService {
         order.setUser(jwtUser);
         order.setStore(store);
 
+
         // 주문 저장
         Order createdOrder = orderRepository.save(order);
+
+        // 주문 메뉴 생성
+        List<OrderMenu> orderMenus = reqDto.getMenuItems().stream().map(item -> {
+            Menu menu = menuRepository.findById(item.getMenuId())
+                    .orElseThrow(() -> new IllegalArgumentException("메뉴를 찾을 수 없습니다."));
+            OrderMenu orderMenu = new OrderMenu();
+            orderMenu.setOrder(order);
+            orderMenu.setMenu(menu);
+            orderMenu.setQuantity(item.getQuantity());
+
+            return orderMenu;
+        }).toList();
+
+        // OrderMenu 저장
+        orderMenuRepository.saveAll(orderMenus);
 
         // 로그 기록
         logOrderAction("ORDER_CREATED", createdOrder, store);
