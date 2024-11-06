@@ -60,9 +60,7 @@ public class StoreService {
         Slice<Store> slice = storeRepository.findAllStores(pageable);
 
         if (slice.isEmpty() && pageable.getPageNumber() > 0) {
-            return new StoreListResponseDto(
-                    0, pageable.getPageNumber(), false, false, false, false, null
-            );
+            throw new ApplicationException(ErrorCode.INVALID_FORMAT);
         }
 
         return new StoreListResponseDto(slice);
