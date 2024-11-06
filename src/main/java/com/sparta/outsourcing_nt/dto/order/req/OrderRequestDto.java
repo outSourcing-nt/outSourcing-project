@@ -28,12 +28,6 @@ public class OrderRequestDto {
     @NotNull(message = "메뉴 항목을 입력해 주세요.")
     private List<MenuItem> menuItems;
 
-    public OrderRequestDto(Integer totalPrice, String requests, Long storeId, List<MenuItem> menuItems) {
-        this.totalPrice = totalPrice;
-        this.requests = requests;
-        this.storeId = storeId;
-        this.menuItems = menuItems;
-    }
 
     @Setter
     @Getter

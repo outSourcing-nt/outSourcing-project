@@ -28,8 +28,7 @@ public class OrderController {
     //주문하기
     @PostMapping("/store/{storeId}/order")
     public ResponseEntity<OrderResponseDto> sendOrder(
-            @Valid @RequestBody OrderRequestDto reqDto,
-            @AuthenticationPrincipal User jwtUser) {
+            @Valid @RequestBody OrderRequestDto reqDto) {
 
                 OrderResponseDto resDto = orderService.sendOrder(reqDto);
                 return ResponseEntity.status(HttpStatus.CREATED).body(resDto);
