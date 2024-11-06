@@ -31,7 +31,7 @@ public class OrderController {
             @Valid @RequestBody OrderRequestDto reqDto,
             @AuthenticationPrincipal User jwtUser) {
 
-                OrderResponseDto resDto = orderService.sendOrder(reqDto, jwtUser);
+                OrderResponseDto resDto = orderService.sendOrder(reqDto);
                 return ResponseEntity.status(HttpStatus.CREATED).body(resDto);
     }
 

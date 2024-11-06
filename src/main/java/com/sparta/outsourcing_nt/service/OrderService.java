@@ -1,5 +1,6 @@
 package com.sparta.outsourcing_nt.service;
 
+import com.sparta.outsourcing_nt.config.userdetails.AuthUserDetails;
 import com.sparta.outsourcing_nt.dto.order.req.OrderRequestDto;
 import com.sparta.outsourcing_nt.dto.order.res.OrderResponseDto;
 import com.sparta.outsourcing_nt.entity.Order;
@@ -10,6 +11,8 @@ import com.sparta.outsourcing_nt.repository.OrderRepository;
 import com.sparta.outsourcing_nt.repository.StoreRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -25,7 +28,12 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final StoreRepository storeRepository;
 
-    public OrderResponseDto sendOrder(@Valid OrderRequestDto reqDto, User jwtUser) {
+    public OrderResponseDto sendOrder(@Valid OrderRequestDto reqDto) {
+        // 현재 로그인한 사용자 정보를 SecurityContext에서 가져옵니다.
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User jwtUser = ((AuthUserDetails) userDetails).getUser();  // AuthUserDetails에서 User 객체를 추출
+
+
         Store store = storeRepository.findById(reqDto.getStoreId())
                 .orElseThrow(() -> new IllegalArgumentException("가게를 찾을 수 없습니다."));
 
