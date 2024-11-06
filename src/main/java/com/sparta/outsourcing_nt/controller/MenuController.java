@@ -4,6 +4,7 @@ import com.sparta.outsourcing_nt.dto.menu.req.MenuRequestDto;
 import com.sparta.outsourcing_nt.dto.menu.res.MenuResponseDto;
 import com.sparta.outsourcing_nt.dto.menu.res.MenuResponsePage;
 import com.sparta.outsourcing_nt.service.MenuService;
+import com.sparta.outsourcing_nt.util.result.ApiResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,20 +17,23 @@ public class MenuController {
     private final MenuService menuService;
 
     @PostMapping
-    public ResponseEntity<MenuResponseDto> createMenu(@RequestBody MenuRequestDto requestDto, @PathVariable Long storeId){
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(menuService.createMenu(requestDto, storeId));
+    public ResponseEntity<ApiResult<MenuResponseDto>> createMenu(@RequestBody MenuRequestDto requestDto, @PathVariable Long storeId){
+        return new ResponseEntity(
+                ApiResult.success("메뉴 생성 완료",
+                        menuService.createMenu(requestDto, storeId)),
+                HttpStatus.OK);
     }
 
     @GetMapping()
-    public ResponseEntity<MenuResponsePage> getAllMenus(@RequestParam(required = false, defaultValue = "0") int page,
+    public ResponseEntity<ApiResult<MenuResponsePage>> getAllMenus(@RequestParam(required = false, defaultValue = "0") int page,
                                                         @RequestParam(required = false, defaultValue = "10") int size,
                                                         @RequestParam(required = false, defaultValue = "modifiedAt") String criteria,
                                                         @PathVariable Long storeId){
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(menuService.getAllMenus(page, size, criteria, storeId));
+        return new ResponseEntity(
+                ApiResult.success("전체 메뉴 조회 성공",
+                        menuService.getAllMenus(page, size, criteria, storeId)),
+                HttpStatus.OK);
+
     }
 
     @PutMapping("/{id}")
@@ -38,6 +42,7 @@ public class MenuController {
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
+
     }
 
     @DeleteMapping("/{id}")

@@ -41,6 +41,7 @@ public class MenuService {
         storeRepository.findById(storeId).orElseThrow(() -> new IllegalArgumentException("Store not found with id: " + storeId));
         Menu menu = menuRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Menu not found with id: " + id));
         menu.updateData(requestDto);
+        //return new MenuResponseDto(menu);
     }
 
     @Transactional
