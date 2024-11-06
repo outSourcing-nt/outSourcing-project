@@ -16,4 +16,12 @@ public enum OrderStatus {
     public String getDescription() {
         return description;
     }
+
+    private OrderStatus parseOrderStatus(String status) {
+        try {
+            return OrderStatus.valueOf(status.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("잘못된 주문 상태입니다: " + status);
+        }
+    }
 }
