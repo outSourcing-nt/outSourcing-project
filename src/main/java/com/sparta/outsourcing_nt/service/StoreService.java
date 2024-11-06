@@ -31,9 +31,16 @@ public class StoreService {
         User user = userRepository.findByEmail(authUser.getUser().getEmail()).orElseThrow(
                 () -> new ApplicationException(ErrorCode.INVALID_FORMAT)); // 로그인 된 유저 정보가 없음
 
+        // 사용자가 소유한 가게의 수를 조회
+        long storeCount = storeRepository.countByUser(user);
+
+        // 가게 수가 3 이상일 경우 예외 발생
+        if (storeCount >= 3) {
+            throw new ApplicationException(ErrorCode.INVALID_FORMAT);
+        }
+
         Store store = reqDto.toEntity();
         store.setUser(user);
-
         storeRepository.save(store);
 
         return store.toResponseDto();
@@ -71,7 +78,7 @@ public class StoreService {
                 () -> new ApplicationException(ErrorCode.INVALID_FORMAT)
         );
 
-        if (store.getStatus() == StoreStatus.CLOSED){
+        if (store.getStatus() == StoreStatus.CLOSED) {
             throw new ApplicationException(ErrorCode.INVALID_FORMAT);
         }
 
@@ -94,7 +101,6 @@ public class StoreService {
 
         return new StoreDeleteDto(storeId, store.getName());
     }
-
 
 
     private Store findStoreById(Long storeId) {
