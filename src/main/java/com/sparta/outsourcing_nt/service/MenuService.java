@@ -24,6 +24,9 @@ public class MenuService {
 
     @Transactional
     public MenuResponseDto createMenu(MenuRequestDto requestDto, Long storeId, AuthUserDetails authUser) {
+        if (authUser.getAuthorities().stream().noneMatch(authority -> authority.getAuthority().equals("ROLE_OWNER"))) {
+            throw new SecurityException("사장님 권한이 있는 사용자만 메뉴를 생성할 수 있습니다.");
+        }
         Store store = storeRepository.findById(storeId).orElseThrow(() -> new IllegalArgumentException("Store not found with id: " + storeId));
         Menu menu = new Menu(requestDto, store);
         Menu saveMenu = menuRepository.save(menu);
@@ -38,7 +41,10 @@ public class MenuService {
     }
 
     @Transactional
-    public MenuResponseDto updateMenu(Long id, MenuRequestDto requestDto, Long storeId) {
+    public MenuResponseDto updateMenu(Long id, MenuRequestDto requestDto, Long storeId, AuthUserDetails authUser) {
+        if (authUser.getAuthorities().stream().noneMatch(authority -> authority.getAuthority().equals("ROLE_OWNER"))) {
+            throw new SecurityException("사장님 권한이 있는 사용자만 메뉴를 생성할 수 있습니다.");
+        }
         storeRepository.findById(storeId).orElseThrow(() -> new IllegalArgumentException("Store not found with id: " + storeId));
         Menu menu = menuRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Menu not found with id: " + id));
         menu.updateData(requestDto);
@@ -47,7 +53,10 @@ public class MenuService {
     }
 
     @Transactional
-    public MenuResponseDto deleteMenu(Long id, Long storeId) {
+    public MenuResponseDto deleteMenu(Long id, Long storeId, AuthUserDetails authUser) {
+        if (authUser.getAuthorities().stream().noneMatch(authority -> authority.getAuthority().equals("ROLE_OWNER"))) {
+            throw new SecurityException("사장님 권한이 있는 사용자만 메뉴를 생성할 수 있습니다.");
+        }
         storeRepository.findById(storeId).orElseThrow(() -> new IllegalArgumentException("Store not found with id: " + storeId));
         Menu menu = menuRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Menu not found with id: " + id));
         menu.softDelete();
