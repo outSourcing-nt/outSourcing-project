@@ -6,11 +6,14 @@ import com.sparta.outsourcing_nt.dto.store.req.StoreModifyRequestDto;
 import com.sparta.outsourcing_nt.dto.store.res.StoreDeleteDto;
 import com.sparta.outsourcing_nt.dto.store.res.StoreListResponseDto;
 import com.sparta.outsourcing_nt.dto.store.res.StoreResponseDto;
+import com.sparta.outsourcing_nt.dto.store.res.StoreSingleResponseDto;
+import com.sparta.outsourcing_nt.entity.Menu;
 import com.sparta.outsourcing_nt.entity.Store;
 import com.sparta.outsourcing_nt.entity.StoreStatus;
 import com.sparta.outsourcing_nt.entity.User;
 import com.sparta.outsourcing_nt.exception.ApplicationException;
 import com.sparta.outsourcing_nt.exception.ErrorCode;
+import com.sparta.outsourcing_nt.repository.MenuRepository;
 import com.sparta.outsourcing_nt.repository.StoreRepository;
 import com.sparta.outsourcing_nt.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,24 +22,34 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
 public class StoreService {
     private final StoreRepository storeRepository;
     private final UserRepository userRepository;
+    private final MenuRepository menuRepository;
 
     @Transactional
     public StoreResponseDto createStore(StoreCreateRequestDto reqDto, AuthUserDetails authUser) {
         User user = userRepository.findByEmail(authUser.getUser().getEmail()).orElseThrow(
                 () -> new ApplicationException(ErrorCode.NOT_FOUND_STORE)); // 로그인 된 유저 정보가 없음
 
+        // 사용자가 소유한 가게의 수를 조회
+        long storeCount = storeRepository.countByUser(user);
+
+        // 가게 수가 3 이상일 경우 예외 발생
+        if (storeCount >= 3) {
+            throw new ApplicationException(ErrorCode.INVALID_FORMAT);
+        }
+
         Store store = reqDto.toEntity();
         store.setUser(user);
-
         storeRepository.save(store);
 
-        return store.toResponseDto();
+        return store.toStoreResponseDto();
     }
 
     @Transactional
@@ -53,11 +66,17 @@ public class StoreService {
 
         store.modifyData(reqDto);
 
-        return store.toResponseDto();
+        return store.toStoreResponseDto();
     }
 
-    public StoreListResponseDto getAllStores(Pageable pageable) {
-        Slice<Store> slice = storeRepository.findAllStores(pageable);
+    public StoreListResponseDto getAllStores(String name, Pageable pageable) {
+        Slice<Store> slice;
+
+        if (name != null && !name.isEmpty()) {
+            slice = storeRepository.findStoresByNameContaining(name, pageable);
+        } else {
+            slice = storeRepository.findAllStores(pageable);
+        }
 
         if (slice.isEmpty() && pageable.getPageNumber() > 0) {
             throw new ApplicationException(ErrorCode.NOT_FOUND);
@@ -66,7 +85,7 @@ public class StoreService {
         return new StoreListResponseDto(slice);
     }
 
-    public StoreResponseDto getStore(Long storeId) {
+    public StoreSingleResponseDto getStore(Long storeId) {
         Store store = storeRepository.findById(storeId).orElseThrow(
                 () -> new ApplicationException(ErrorCode.NOT_FOUND_STORE)
         );
@@ -75,7 +94,9 @@ public class StoreService {
             throw new ApplicationException(ErrorCode.CLOSED_STORE);
         }
 
-        return store.toResponseDto();
+        List<Menu> menuList = menuRepository.findAllByStoreId(storeId);
+
+        return store.toStoreSingleResponseDto(menuList);
     }
 
     @Transactional
@@ -94,7 +115,6 @@ public class StoreService {
 
         return new StoreDeleteDto(storeId, store.getName());
     }
-
 
 
     private Store findStoreById(Long storeId) {

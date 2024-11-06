@@ -32,6 +32,6 @@ public class StoreListResponseDto {
         this.storeList = slice.getContent()
                 .stream()
                 .filter(store -> store.getStatus() != StoreStatus.CLOSED)
-                .map(Store::toResponseDto).toList();
+                .map(Store::toStoreResponseDto).toList();
     }
 }
