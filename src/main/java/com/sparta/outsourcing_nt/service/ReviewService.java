@@ -72,14 +72,15 @@ public class ReviewService {
     }
 
     @Transactional
-    public void deleteReview(Long storeId, Long reviewId, User user) {
+    public ReviewResponseDto deleteReview(Long storeId, Long reviewId, User user) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new IllegalArgumentException("Review not found with id: " + reviewId));
 
         if (!review.getStore().getId().equals(storeId) || !review.getUser().getId().equals(user.getId())) {
             throw new SecurityException("자신의 리뷰만 삭제할 수 있습니다.");
         }
-
+        ReviewResponseDto deletedReviewDto = new ReviewResponseDto(review);
         reviewRepository.delete(review);
+        return deletedReviewDto;
     }
 }
