@@ -29,11 +29,11 @@ public class OrderController {
     //주문하기
     @PostMapping("/store/{storeId}/order")
     public ResponseEntity<ApiResult<OrderResponseDto>> sendOrder(
-            @Valid @RequestBody OrderRequestDto reqDto) {
+            @Valid @RequestBody OrderRequestDto reqDto, @AuthenticationPrincipal AuthUserDetails authUser) {
 
                 return new ResponseEntity<>(
                         ApiResult.success("주문하기 성공",
-                                orderService.sendOrder(reqDto)),
+                                orderService.sendOrder(reqDto,authUser)),
                         HttpStatus.OK);
     }
 

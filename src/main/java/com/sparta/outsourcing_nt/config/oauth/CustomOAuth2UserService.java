@@ -54,10 +54,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         // 기존에 네이버 아이디가 존재 하는지
         Optional<User> userOp = userRepository.findByNaverProviderId(userInfo.getId());
         if(userOp.isPresent()) {
-            throw new ApplicationException(ErrorCode.INVALID_FORMAT);// 기존에 존재 하는 네이버 아이디 오류
+            throw new ApplicationException(ErrorCode.PRESENT_USER);// 기존에 존재 하는 네이버 아이디 오류
         }
         if(authUser.getUser().getNaverProviderId() != null){
-            throw new ApplicationException(ErrorCode.INVALID_FORMAT); // 이미 아이디에 네이버 아이디가 등록이 되어있음
+            throw new ApplicationException(ErrorCode.PRESENT_USER); // 이미 아이디에 네이버 아이디가 등록이 되어있음
         }
         authUser.getUser().setNaverProviderId(userInfo.getId());
         return userRepository.save(authUser.getUser()); // 등록 및 반환
@@ -68,7 +68,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         Optional<User> userOp = userRepository.findByNaverProviderId(userInfo.getId());
 
         if(userOp.isEmpty()) {
-            throw new ApplicationException(ErrorCode.INVALID_FORMAT);
+            throw new ApplicationException(ErrorCode.UNAUTHRIZED_USER);
         }
         return userOp.get();
     }
