@@ -1,6 +1,7 @@
 package com.sparta.outsourcing_nt.dto.store.res;
 
 import com.sparta.outsourcing_nt.entity.Store;
+import com.sparta.outsourcing_nt.entity.StoreStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,6 +29,9 @@ public class StoreListResponseDto {
         this.hasPrevious = slice.hasPrevious();
         this.isFirst = slice.isFirst();
         this.isLast = slice.isLast();
-        this.storeList = slice.getContent().stream().map(Store::toResponseDto).toList();
+        this.storeList = slice.getContent()
+                .stream()
+                .filter(store -> store.getStatus() != StoreStatus.CLOSED)
+                .map(Store::toResponseDto).toList();
     }
 }
