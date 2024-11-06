@@ -22,7 +22,7 @@ public enum ErrorCode {
     UNAUTHORIZED_REVIEWER(HttpStatus.FORBIDDEN, "ERR013", "주문한 사용자만 리뷰를 작성할 수 있습니다."),
     NOT_FOUND_REVIEW(HttpStatus.NOT_FOUND,"ERR014","주문을 찾을 수 없습니다."),
     UNAUTHORIZED_REVIEW_EDIT(HttpStatus.FORBIDDEN, "ERR015", "자신의 리뷰만 수정/삭제할 수 있습니다."),
-    NOT_FOUND(HttpStatus.NOT_FOUND,"ERR016","값을 찾을 수 없습니다.");
+    NOT_FOUND(HttpStatus.NOT_FOUND,"ERR016","값을 찾을 수 없습니다."),
     STORE_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, "ERR017", "소유할 수 있는 가게의 최대 개수를 초과했습니다.");
 
 
