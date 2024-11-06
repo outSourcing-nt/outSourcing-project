@@ -5,6 +5,8 @@ import com.sparta.outsourcing_nt.dto.store.res.StoreResponseDto;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
@@ -86,5 +88,10 @@ public class Store extends Timestamped{
         this.deliveryTip = reqDto.getDeliveryTip();
         this.openTime = reqDto.getOpenTime();
         this.closeTime = reqDto.getCloseTime();
+    }
+
+    public void close() {
+        this.status = StoreStatus.CLOSED;
+        setDeletedAt(LocalDateTime.now());
     }
 }

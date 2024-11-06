@@ -3,6 +3,7 @@ package com.sparta.outsourcing_nt.service;
 import com.sparta.outsourcing_nt.config.userdetails.AuthUserDetails;
 import com.sparta.outsourcing_nt.dto.store.req.StoreCreateRequestDto;
 import com.sparta.outsourcing_nt.dto.store.req.StoreModifyRequestDto;
+import com.sparta.outsourcing_nt.dto.store.res.StoreDeleteDto;
 import com.sparta.outsourcing_nt.dto.store.res.StoreListResponseDto;
 import com.sparta.outsourcing_nt.dto.store.res.StoreResponseDto;
 import com.sparta.outsourcing_nt.entity.Store;
@@ -66,6 +67,24 @@ public class StoreService {
 
         return store.toResponseDto();
     }
+
+    @Transactional
+    public StoreDeleteDto deleteStore(Long storeId, AuthUserDetails authUser) {
+        User user = userRepository.findByEmail(authUser.getUser().getEmail()).orElseThrow(
+                () -> new ApplicationException(ErrorCode.INVALID_FORMAT)); // 로그인 된 유저 정보가 없음
+
+        Store store = findStoreById(storeId);
+
+        // 가게 소유자의 id와 일치하는지 확인
+        if (!store.getUser().getId().equals(user.getId())) {
+            throw new ApplicationException(ErrorCode.INVALID_FORMAT);
+        }
+
+        store.close();
+
+        return new StoreDeleteDto(storeId, store.getName());
+    }
+
 
 
     private Store findStoreById(Long storeId) {
