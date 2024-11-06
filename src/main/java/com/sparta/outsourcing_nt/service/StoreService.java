@@ -25,8 +25,15 @@ public class StoreService {
     private final UserRepository userRepository;
 
     @Transactional
-    public StoreResponseDto createStore(StoreCreateRequestDto reqDto) {
-        Store store = storeRepository.save(reqDto.toEntity());
+    public StoreResponseDto createStore(StoreCreateRequestDto reqDto, AuthUserDetails authUser) {
+        User user = userRepository.findByEmail(authUser.getUser().getEmail()).orElseThrow(
+                () -> new ApplicationException(ErrorCode.INVALID_FORMAT)); // 로그인 된 유저 정보가 없음
+
+        Store store = reqDto.toEntity();
+        store.setUser(user);
+
+        storeRepository.save(store);
+
         return store.toResponseDto();
     }
 
@@ -38,7 +45,7 @@ public class StoreService {
         Store store = findStoreById(storeId);
 
         // 가게 소유자의 id와 일치하는지 확인
-        if (!store.getUser().getId().equals(authUser.getUser().getId())) {
+        if (!store.getUser().getId().equals(user.getId())) {
             throw new ApplicationException(ErrorCode.INVALID_FORMAT);
         }
 

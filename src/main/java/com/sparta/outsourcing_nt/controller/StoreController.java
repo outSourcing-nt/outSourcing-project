@@ -25,11 +25,12 @@ public class StoreController {
 
     @PostMapping("/store")
     public ResponseEntity<StoreResponseDto> createStore(
-            @RequestBody @Valid StoreCreateRequestDto reqDto) {
-        // @AuthenticationPrincipal UserDetailsImpl userDetails
+            @RequestBody @Valid StoreCreateRequestDto reqDto,
+            @AuthenticationPrincipal AuthUserDetails authUser
+    ) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(storeService.createStore(reqDto));
+                .body(storeService.createStore(reqDto, authUser));
     }
 
     @PutMapping("/store/{storeId}")
