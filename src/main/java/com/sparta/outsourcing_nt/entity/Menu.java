@@ -4,8 +4,9 @@ import com.sparta.outsourcing_nt.dto.menu.req.MenuRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -27,8 +28,6 @@ public class Menu extends Timestamped {
     @Column(nullable = false)
     private int price;
 
-    @Column(nullable = false)
-    private String status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id", nullable = false)
@@ -45,5 +44,9 @@ public class Menu extends Timestamped {
         this.category = requestDto.getCategory();
         this.name = requestDto.getName();
         this.price = requestDto.getPrice();
+    }
+
+    public void softDelete() {
+        this.setDeletedAt(LocalDateTime.now());
     }
 }

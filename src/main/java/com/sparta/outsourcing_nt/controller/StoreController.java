@@ -1,11 +1,17 @@
 package com.sparta.outsourcing_nt.controller;
 
+import com.sparta.outsourcing_nt.config.userdetails.AuthUserDetails;
 import com.sparta.outsourcing_nt.dto.store.req.StoreModifyRequestDto;
 import com.sparta.outsourcing_nt.dto.store.req.StoreCreateRequestDto;
+import com.sparta.outsourcing_nt.dto.store.res.StoreDeleteDto;
+import com.sparta.outsourcing_nt.dto.store.res.StoreListResponseDto;
 import com.sparta.outsourcing_nt.dto.store.res.StoreResponseDto;
 import com.sparta.outsourcing_nt.service.StoreService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -36,5 +42,27 @@ public class StoreController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(storeService.modifyStore(storeId, reqDto, authUser));
+    }
+
+    @GetMapping("/store")
+    public ResponseEntity<StoreListResponseDto> getAllStores(
+            @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(storeService.getAllStores(pageable));
+    }
+
+    @GetMapping("/store/{storeId}")
+    public ResponseEntity<StoreResponseDto> getStore(@PathVariable Long storeId) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(storeService.getStore(storeId));
+    }
+
+    @DeleteMapping("/store/{storeId}")
+    public ResponseEntity<StoreDeleteDto> deleteStore(@PathVariable Long storeId, @AuthenticationPrincipal AuthUserDetails authUser) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(storeService.deleteStore(storeId, authUser));
     }
 }
