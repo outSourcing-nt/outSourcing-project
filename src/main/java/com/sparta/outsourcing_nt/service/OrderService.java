@@ -4,6 +4,8 @@ import com.sparta.outsourcing_nt.config.userdetails.AuthUserDetails;
 import com.sparta.outsourcing_nt.dto.order.req.OrderRequestDto;
 import com.sparta.outsourcing_nt.dto.order.res.OrderResponseDto;
 import com.sparta.outsourcing_nt.entity.*;
+import com.sparta.outsourcing_nt.exception.ApplicationException;
+import com.sparta.outsourcing_nt.exception.ErrorCode;
 import com.sparta.outsourcing_nt.repository.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,22 +30,20 @@ public class OrderService {
     private final OrderMenuRepository orderMenuRepository;
     private final MenuRepository menuRepository;
 
-    public OrderResponseDto sendOrder(OrderRequestDto reqDto) {
-        // 현재 로그인한 사용자 정보를 SecurityContext에서 가져옵니다.
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User jwtUser = ((AuthUserDetails) userDetails).getUser();  // AuthUserDetails에서 User 객체를 추출
+    public OrderResponseDto sendOrder(OrderRequestDto reqDto,AuthUserDetails authUser) {
+        User jwtUser = authUser.getUser();
 
 
         Store store = storeRepository.findById(reqDto.getStoreId())
-                .orElseThrow(() -> new IllegalArgumentException("가게를 찾을 수 없습니다."));
+                .orElseThrow(() -> new ApplicationException(ErrorCode.NOT_FOUND_STORE));
 
         // 영업 시간 확인
         if (!isStoreOpen(store)) {
-            throw new IllegalArgumentException("가게의 오픈 시간이 아닙니다.");
+            throw new ApplicationException(ErrorCode.CLOSED_STORE);
         }
         // 최소 주문 금액 호가인
         if (reqDto.getTotalPrice() < store.getMinDeliveryPrice()) {
-            throw new IllegalArgumentException("최소 주문 금액을 충족하지 않습니다.");
+            throw new ApplicationException(ErrorCode.MINIMUM_AMOUNT_REQUIRED);
         }
 
         Order order = new Order();
@@ -60,7 +60,7 @@ public class OrderService {
         // 주문 메뉴 생성
         List<OrderMenu> orderMenus = reqDto.getMenuItems().stream().map(item -> {
             Menu menu = menuRepository.findById(item.getMenuId())
-                    .orElseThrow(() -> new IllegalArgumentException("메뉴를 찾을 수 없습니다."));
+                    .orElseThrow(() -> new ApplicationException(ErrorCode.NOT_FOUND_MENU));
             OrderMenu orderMenu = new OrderMenu();
             orderMenu.setOrder(order);
             orderMenu.setMenu(menu);
@@ -112,7 +112,7 @@ public class OrderService {
     // 주문 ID로 주문 상세 정보 조회
     public OrderResponseDto getOrderById(Long orderId) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 주문을 찾을 수 없습니다. 주문 ID: " + orderId));
+                .orElseThrow(() -> new ApplicationException(ErrorCode.NOT_FOUND_ORDER));
         return new OrderResponseDto(order);
     }
 
@@ -120,11 +120,11 @@ public class OrderService {
     public OrderResponseDto updateOrderStatus(Long storeId, Long orderId, OrderStatus status) {
         // Store가 존재하는지 확인
         Store store = storeRepository.findById(storeId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 가게를 찾을 수 없습니다."));
+                .orElseThrow(() -> new ApplicationException(ErrorCode.NOT_FOUND_STORE));
 
         // Order가 존재하는지 확인
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 주문을 찾을 수 없습니다."));
+                .orElseThrow(() -> new ApplicationException(ErrorCode.NOT_FOUND_STORE));
 
         // 상태 업데이트
         order.setStatus(status);
