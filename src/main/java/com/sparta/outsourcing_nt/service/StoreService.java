@@ -63,8 +63,14 @@ public class StoreService {
         return store.toResponseDto();
     }
 
-    public StoreListResponseDto getAllStores(Pageable pageable) {
-        Slice<Store> slice = storeRepository.findAllStores(pageable);
+    public StoreListResponseDto getAllStores(String name, Pageable pageable) {
+        Slice<Store> slice;
+
+        if (name != null && !name.isEmpty()) {
+            slice = storeRepository.findStoresByNameContaining(name, pageable);
+        } else {
+            slice = storeRepository.findAllStores(pageable);
+        }
 
         if (slice.isEmpty() && pageable.getPageNumber() > 0) {
             throw new ApplicationException(ErrorCode.INVALID_FORMAT);

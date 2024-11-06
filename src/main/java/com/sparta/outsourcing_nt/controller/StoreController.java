@@ -54,12 +54,13 @@ public class StoreController {
 
     @GetMapping("/store")
     public ResponseEntity<ApiResult<StoreListResponseDto>> getAllStores(
+            @RequestParam(value = "name", required = false) String name,
             @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable
     ) {
         return new ResponseEntity<>(
                 ApiResult.success(
                         "가게 전체 조회 성공",
-                        storeService.getAllStores(pageable)
+                        storeService.getAllStores(name, pageable)
                 ),
                 HttpStatus.OK);
     }
