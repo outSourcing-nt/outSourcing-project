@@ -1,11 +1,14 @@
 package com.sparta.outsourcing_nt.entity;
 
+import com.sparta.outsourcing_nt.dto.menu.res.MenuResponseDto;
 import com.sparta.outsourcing_nt.dto.store.req.StoreModifyRequestDto;
 import com.sparta.outsourcing_nt.dto.store.res.StoreResponseDto;
+import com.sparta.outsourcing_nt.dto.store.res.StoreSingleResponseDto;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -60,7 +63,7 @@ public class Store extends Timestamped{
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public StoreResponseDto toResponseDto() {
+    public StoreResponseDto toStoreResponseDto() {
         return new StoreResponseDto(
                 id,
                 name,
@@ -75,6 +78,25 @@ public class Store extends Timestamped{
                 getCreatedAt(),
                 getModifiedAt(),
                 status
+        );
+    }
+
+    public StoreSingleResponseDto toStoreSingleResponseDto(List<Menu> menuList) {
+        return new StoreSingleResponseDto(
+                id,
+                name,
+                category,
+                address,
+                phone,
+                content,
+                minDeliveryPrice,
+                deliveryTip,
+                openTime,
+                closeTime,
+                getCreatedAt(),
+                getModifiedAt(),
+                status,
+                menuList.stream().map(MenuResponseDto::new).toList()
         );
     }
 

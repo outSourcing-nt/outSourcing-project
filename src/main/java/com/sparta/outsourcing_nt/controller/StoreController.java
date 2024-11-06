@@ -6,6 +6,7 @@ import com.sparta.outsourcing_nt.dto.store.req.StoreCreateRequestDto;
 import com.sparta.outsourcing_nt.dto.store.res.StoreDeleteDto;
 import com.sparta.outsourcing_nt.dto.store.res.StoreListResponseDto;
 import com.sparta.outsourcing_nt.dto.store.res.StoreResponseDto;
+import com.sparta.outsourcing_nt.dto.store.res.StoreSingleResponseDto;
 import com.sparta.outsourcing_nt.service.StoreService;
 import com.sparta.outsourcing_nt.util.result.ApiResult;
 import jakarta.validation.Valid;
@@ -66,7 +67,7 @@ public class StoreController {
     }
 
     @GetMapping("/store/{storeId}")
-    public ResponseEntity<ApiResult<StoreResponseDto>> getStore(@PathVariable Long storeId) {
+    public ResponseEntity<ApiResult<StoreSingleResponseDto>> getStore(@PathVariable Long storeId) {
         return new ResponseEntity<>(
                 ApiResult.success(
                         "가게 단일 조회 성공",
