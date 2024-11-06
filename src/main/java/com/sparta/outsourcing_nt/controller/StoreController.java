@@ -58,7 +58,7 @@ public class StoreController {
     ) {
         return new ResponseEntity<>(
                 ApiResult.success(
-                        "가게 수정 성공",
+                        "가게 전체 조회 성공",
                         storeService.getAllStores(pageable)
                 ),
                 HttpStatus.OK);
@@ -68,7 +68,7 @@ public class StoreController {
     public ResponseEntity<ApiResult<StoreResponseDto>> getStore(@PathVariable Long storeId) {
         return new ResponseEntity<>(
                 ApiResult.success(
-                        "가게 수정 성공",
+                        "가게 단일 조회 성공",
                         storeService.getStore(storeId)
                 ),
                 HttpStatus.OK);
@@ -78,7 +78,7 @@ public class StoreController {
     public ResponseEntity<ApiResult<StoreDeleteDto>> deleteStore(@PathVariable Long storeId, @AuthenticationPrincipal AuthUserDetails authUser) {
         return new ResponseEntity<>(
                 ApiResult.success(
-                        "가게 수정 성공",
+                        "가게 폐업 성공",
                         storeService.deleteStore(storeId, authUser)
                 ),
                 HttpStatus.OK);
