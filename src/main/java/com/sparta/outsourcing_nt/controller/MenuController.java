@@ -18,7 +18,7 @@ public class MenuController {
     private final MenuService menuService;
 
     @PostMapping
-    public ResponseEntity<ApiResult<MenuResponseDto>> createMenu(@RequestBody MenuRequestDto requestDto, @PathVariable Long storeId, AuthUserDetails authUser){
+    public ResponseEntity<ApiResult<MenuResponseDto>> createMenu(@RequestBody MenuRequestDto requestDto, @PathVariable Long storeId, AuthUserDetails authUser) {
         return new ResponseEntity<>(
                 ApiResult.success("메뉴 생성 완료",
                         menuService.createMenu(requestDto, storeId, authUser)),
@@ -29,9 +29,9 @@ public class MenuController {
 
     @GetMapping()
     public ResponseEntity<ApiResult<MenuResponsePage>> getAllMenus(@RequestParam(required = false, defaultValue = "0") int page,
-                                                        @RequestParam(required = false, defaultValue = "10") int size,
-                                                        @RequestParam(required = false, defaultValue = "modifiedAt") String criteria,
-                                                        @PathVariable Long storeId){
+                                                                   @RequestParam(required = false, defaultValue = "10") int size,
+                                                                   @RequestParam(required = false, defaultValue = "modifiedAt") String criteria,
+                                                                   @PathVariable Long storeId) {
         return new ResponseEntity<>(
                 ApiResult.success("전체 메뉴 조회 성공",
                         menuService.getAllMenus(page, size, criteria, storeId)),
@@ -40,24 +40,24 @@ public class MenuController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResult<MenuResponseDto>> updateMenu(@PathVariable Long id, @RequestBody MenuRequestDto requestDto, @PathVariable Long storeId){
-        menuService.updateMenu(id, requestDto, storeId);
+    public ResponseEntity<ApiResult<MenuResponseDto>> updateMenu(@PathVariable Long id, @RequestBody MenuRequestDto requestDto, @PathVariable Long storeId, AuthUserDetails authUser) {
+        menuService.updateMenu(id, requestDto, storeId, authUser);
 
         return new ResponseEntity<>(
                 ApiResult.success(
                         "메뉴 수정 성공",
-                        menuService.updateMenu(id, requestDto, storeId)),
+                        menuService.updateMenu(id, requestDto, storeId, authUser)),
                 HttpStatus.OK);
 
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResult<MenuResponseDto>> deleteMenu(@PathVariable Long id, @PathVariable Long storeId){
-        menuService.deleteMenu(id, storeId);
+    public ResponseEntity<ApiResult<MenuResponseDto>> deleteMenu(@PathVariable Long id, @PathVariable Long storeId, AuthUserDetails authUser) {
+        menuService.deleteMenu(id, storeId, authUser);
         return new ResponseEntity<>(
                 ApiResult.success(
-                        "메뉴 삭제 성공" ,
-                        menuService.deleteMenu(id, storeId)),
+                        "메뉴 삭제 성공",
+                        menuService.deleteMenu(id, storeId, authUser)),
                 HttpStatus.OK);
 
     }

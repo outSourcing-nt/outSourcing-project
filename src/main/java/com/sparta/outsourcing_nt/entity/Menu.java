@@ -29,7 +29,6 @@ public class Menu extends Timestamped {
     @Column(nullable = false)
     private int price;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id", nullable = false)
     private Store store;

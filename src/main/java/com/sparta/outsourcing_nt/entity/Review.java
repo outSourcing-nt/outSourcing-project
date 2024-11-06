@@ -1,9 +1,9 @@
 package com.sparta.outsourcing_nt.entity;
 
+import com.sparta.outsourcing_nt.dto.review.req.ReviewRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Entity
@@ -28,10 +28,18 @@ public class Review extends Timestamped{
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order", nullable = false)
+    @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id", nullable = false)
     private Store store;
+
+    public Review(ReviewRequestDto requestDto, Store store, User user, Order order) {
+        this.rating = requestDto.getRating();
+        this.content = requestDto.getContent();
+        this.store = store;
+        this.user = user;
+        this.order = order;
+    }
 }
