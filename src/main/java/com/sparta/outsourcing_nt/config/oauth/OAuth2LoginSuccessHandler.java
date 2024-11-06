@@ -24,10 +24,6 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         // 사용자 정보에서 JWT 토큰을 생성
-        log.info("-----------------------------------");
-        log.info("onAuthenticationSuccess");
-        log.info("-----------------------------------");
-
         String token = jwtUtil.generateToken(authentication);
 
         // JSON 형식으로 응답
