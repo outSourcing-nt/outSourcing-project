@@ -3,7 +3,7 @@
 - 모든 테이블은 고유 식별자(ID)를 가진다
 - 3 Layer Architecture 에 따라 각 Layer의 목적에 맞게 개발
 - CRUD 필수 기능은 모두 데이터베이스 연결 및 JPA를 사용해서 개발
-- JPA 연관관계는 양방향으로 구현
+- JPA 연관관계는 단방향으로 구현
 - 인증/인가 절차는 JWT 및 Spring security를 활용하여 개발.
 
 ## 주요기능
