@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +27,7 @@ public class StoreController {
 
     private final StoreService storeService;
 
+    @Secured("ROLE_OWNER")
     @PostMapping("/store")
     public ResponseEntity<ApiResult<StoreResponseDto>> createStore(
             @RequestBody @Valid StoreCreateRequestDto reqDto,
@@ -39,6 +41,7 @@ public class StoreController {
                 HttpStatus.CREATED);
     }
 
+    @Secured("ROLE_OWNER")
     @PutMapping("/store/{storeId}")
     public ResponseEntity<ApiResult<StoreResponseDto>> modifyStore(
             @PathVariable Long storeId,
@@ -76,6 +79,7 @@ public class StoreController {
                 HttpStatus.OK);
     }
 
+    @Secured("ROLE_OWNER")
     @DeleteMapping("/store/{storeId}")
     public ResponseEntity<ApiResult<StoreDeleteDto>> deleteStore(@PathVariable Long storeId, @AuthenticationPrincipal AuthUserDetails authUser) {
         return new ResponseEntity<>(

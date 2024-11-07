@@ -42,6 +42,8 @@ public class StoreCreateRequestDto {
                 .address(address)
                 .phone(phone)
                 .content(content)
+                .minDeliveryPrice(minDeliveryPrice)
+                .deliveryTip(deliveryTip)
                 .openTime(openTime)
                 .closeTime(closeTime)
                 .status(StoreStatus.ACTIVE)
