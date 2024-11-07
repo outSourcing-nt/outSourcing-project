@@ -26,9 +26,6 @@ public class MenuService {
 
     @Transactional
     public MenuResponseDto createMenu(MenuRequestDto requestDto, Long storeId, AuthUserDetails authUser) {
-        if (authUser.getAuthorities().stream().noneMatch(authority -> authority.getAuthority().equals("ROLE_OWNER"))) {
-            throw new ApplicationException(ErrorCode.NONE_PERMISSION);
-        }
         Store store = storeRepository.findById(storeId).orElseThrow(() -> new IllegalArgumentException("Store not found with id: " + storeId));
         Menu menu = new Menu(requestDto, store);
         Menu saveMenu = menuRepository.save(menu);
@@ -44,9 +41,6 @@ public class MenuService {
 
     @Transactional
     public MenuResponseDto updateMenu(Long id, MenuRequestDto requestDto, Long storeId, AuthUserDetails authUser) {
-        if (authUser.getAuthorities().stream().noneMatch(authority -> authority.getAuthority().equals("ROLE_OWNER"))) {
-            throw new ApplicationException(ErrorCode.NONE_PERMISSION);
-        }
         storeRepository.findById(storeId).orElseThrow(() -> new IllegalArgumentException("Store not found with id: " + storeId));
         Menu menu = menuRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Menu not found with id: " + id));
         menu.updateData(requestDto);
@@ -56,9 +50,6 @@ public class MenuService {
 
     @Transactional
     public MenuResponseDto deleteMenu(Long id, Long storeId, AuthUserDetails authUser) {
-        if (authUser.getAuthorities().stream().noneMatch(authority -> authority.getAuthority().equals("ROLE_OWNER"))) {
-            throw new ApplicationException(ErrorCode.NONE_PERMISSION);
-        }
         storeRepository.findById(storeId).orElseThrow(() -> new IllegalArgumentException("Store not found with id: " + storeId));
         Menu menu = menuRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Menu not found with id: " + id));
         menu.softDelete();

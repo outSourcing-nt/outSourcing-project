@@ -9,6 +9,7 @@ import com.sparta.outsourcing_nt.util.result.ApiResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class MenuController {
     private final MenuService menuService;
 
+    @Secured("ROLE_OWNER")
     @PostMapping
     public ResponseEntity<ApiResult<MenuResponseDto>> createMenu(@RequestBody MenuRequestDto requestDto, @PathVariable Long storeId, AuthUserDetails authUser) {
         return new ResponseEntity<>(
@@ -39,6 +41,7 @@ public class MenuController {
 
     }
 
+    @Secured("ROLE_OWNER")
     @PutMapping("/{id}")
     public ResponseEntity<ApiResult<MenuResponseDto>> updateMenu(@PathVariable Long id, @RequestBody MenuRequestDto requestDto, @PathVariable Long storeId, AuthUserDetails authUser) {
         menuService.updateMenu(id, requestDto, storeId, authUser);
@@ -51,6 +54,7 @@ public class MenuController {
 
     }
 
+    @Secured("ROLE_OWNER")
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResult<MenuResponseDto>> deleteMenu(@PathVariable Long id, @PathVariable Long storeId, AuthUserDetails authUser) {
         menuService.deleteMenu(id, storeId, authUser);
