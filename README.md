@@ -19,3 +19,8 @@ https://teamsparta.notion.site/12a2dc3ef5148163bd4bd58fbdb2b1c9?v=12a2dc3ef51481
 
 ## ERD
 ![outsourcing_erd](https://github.com/user-attachments/assets/93ec8db2-f5b5-46ed-b71f-8b584929d137)
+
+## 와이어프레임
+![image (1)](https://github.com/user-attachments/assets/deece385-b606-490b-90f0-868007b77bab)
+
+![image (5)](https://github.com/user-attachments/assets/aea99981-47df-49a9-9eef-ec593cfd8df0)
