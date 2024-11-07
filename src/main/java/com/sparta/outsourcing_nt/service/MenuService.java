@@ -6,8 +6,7 @@ import com.sparta.outsourcing_nt.dto.menu.res.MenuResponseDto;
 import com.sparta.outsourcing_nt.dto.menu.res.MenuResponsePage;
 import com.sparta.outsourcing_nt.entity.Menu;
 import com.sparta.outsourcing_nt.entity.Store;
-import com.sparta.outsourcing_nt.exception.ApplicationException;
-import com.sparta.outsourcing_nt.exception.ErrorCode;
+import com.sparta.outsourcing_nt.entity.UserRole;
 import com.sparta.outsourcing_nt.repository.MenuRepository;
 import com.sparta.outsourcing_nt.repository.StoreRepository;
 import jakarta.transaction.Transactional;
@@ -26,8 +25,8 @@ public class MenuService {
 
     @Transactional
     public MenuResponseDto createMenu(MenuRequestDto requestDto, Long storeId, AuthUserDetails authUser) {
-        if (authUser.getAuthorities().stream().noneMatch(authority -> authority.getAuthority().equals("ROLE_OWNER"))) {
-            throw new ApplicationException(ErrorCode.NONE_PERMISSION);
+        if (!authUser.getUser().getRole().equals(UserRole.ROLE_OWNER)) {
+            throw new SecurityException("사장님 권한이 있는 사용자만 메뉴를 생성할 수 있습니다.");
         }
         Store store = storeRepository.findById(storeId).orElseThrow(() -> new IllegalArgumentException("Store not found with id: " + storeId));
         Menu menu = new Menu(requestDto, store);
@@ -44,8 +43,8 @@ public class MenuService {
 
     @Transactional
     public MenuResponseDto updateMenu(Long id, MenuRequestDto requestDto, Long storeId, AuthUserDetails authUser) {
-        if (authUser.getAuthorities().stream().noneMatch(authority -> authority.getAuthority().equals("ROLE_OWNER"))) {
-            throw new ApplicationException(ErrorCode.NONE_PERMISSION);
+        if (!authUser.getUser().getRole().equals(UserRole.ROLE_OWNER)) {
+            throw new SecurityException("사장님 권한이 있는 사용자만 메뉴를 생성할 수 있습니다.");
         }
         storeRepository.findById(storeId).orElseThrow(() -> new IllegalArgumentException("Store not found with id: " + storeId));
         Menu menu = menuRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Menu not found with id: " + id));
@@ -56,8 +55,8 @@ public class MenuService {
 
     @Transactional
     public MenuResponseDto deleteMenu(Long id, Long storeId, AuthUserDetails authUser) {
-        if (authUser.getAuthorities().stream().noneMatch(authority -> authority.getAuthority().equals("ROLE_OWNER"))) {
-            throw new ApplicationException(ErrorCode.NONE_PERMISSION);
+        if (!authUser.getUser().getRole().equals(UserRole.ROLE_OWNER)) {
+            throw new SecurityException("사장님 권한이 있는 사용자만 메뉴를 생성할 수 있습니다.");
         }
         storeRepository.findById(storeId).orElseThrow(() -> new IllegalArgumentException("Store not found with id: " + storeId));
         Menu menu = menuRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Menu not found with id: " + id));
